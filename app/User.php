@@ -54,7 +54,7 @@ class User extends Authenticatable
         if($this->photo){
             return '/storage/users/' . $this->photo;
         }
-        return 'https://via.placeholder.com/300';
+        return 'https://via.placeholder.com/200';
     }
     
     /**

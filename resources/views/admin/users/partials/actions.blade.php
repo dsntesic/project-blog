@@ -1,3 +1,4 @@
+@if(auth()->user()->id != $user->id)
 <div class="btn-group">
     <a 
         href="{{route('admin.users.edit',['user' => $user->id])}}" 
@@ -32,4 +33,7 @@
     </button>
     @endif
 </div>
+@else
+That's you
+@endif
 

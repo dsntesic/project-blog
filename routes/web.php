@@ -31,6 +31,15 @@ Route::middleware('auth')->prefix('/admin')->namespace('Admin')->name('admin.')-
         Route::post('/ban','UsersController@ban')->name('ban');
     });
     
+    //Routes for ProfileController
+    Route::prefix('/profile')->name('profile.')->group(function(){
+        Route::get('/edit','ProfileController@edit')->name('edit');
+        Route::post('/update','ProfileController@update')->name('update');
+        Route::get('/show-change-password','ProfileController@showChangePassword')->name('show_change_password');
+        Route::post('/change-password','ProfileController@changePassword')->name('change_password');
+        Route::post('/delete-photo','ProfileController@deletePhoto')->name('delete_photo');
+    });
+    
 });
 
 Auth::routes();

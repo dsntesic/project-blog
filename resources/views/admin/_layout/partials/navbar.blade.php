@@ -16,10 +16,10 @@
                 <i class="far fa-user"></i>
             </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                <a href="#" class="dropdown-item">
+                <a href="{{route('admin.profile.edit')}}" class="dropdown-item">
                     <!-- Message Start -->
                     <div class="media align-items-center">
-                        <img src="{{auth()->user()->getPhotoUrl()}}" alt="{{auth()->user()->name}}" class="img-size-50 mr-3 img-circle">
+                        <img src="{{auth()->user()->getPhotoUrl()}}" alt="{{auth()->user()->name}}" data-navbar='photo' class="img-size-50 mr-3 img-circle">
                         <div class="media-body">
                             <h3 class="dropdown-item-title">
                                 {{auth()->user()->name}}
@@ -29,7 +29,7 @@
                     <!-- Message End -->
                 </a>
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
+                <a href="{{route('admin.profile.edit')}}" class="dropdown-item">
                     <i class="fas fa-user"></i> @lang('Your Profile')
                 </a>
                 <div class="dropdown-divider"></div>

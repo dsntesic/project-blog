@@ -172,7 +172,6 @@ class UsersController extends Controller {
         \Image::make(public_path("/storage/users/$photoName"))
                 ->fit(300,300)
                 ->save();
-
         return $photoName;
     }
 
