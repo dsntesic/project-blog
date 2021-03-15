@@ -15,7 +15,7 @@ class UsersTableSeeder extends Seeder
         DB::table('users')->truncate();
         DB::table('users')->insert([
                 'status' => 1,
-                'email' => 'dsntesic@gmail.com',
+                'email' => 'dsntesic1985@gmail.com',
                 'password' => \Hash::make('admin'),
                 'name' => 'Dušan Tešić',
                 'phone' => '+38164111111',

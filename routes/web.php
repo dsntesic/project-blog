@@ -13,7 +13,7 @@
 
 //Admin routes
 
-Route::prefix('/admin')->namespace('Admin')->name('admin.')->group(function(){
+Route::middleware('auth')->prefix('/admin')->namespace('Admin')->name('admin.')->group(function(){
     
     //Routes for IndexController
     Route::get('/','IndexController@index')->name('index.index');
@@ -32,3 +32,7 @@ Route::prefix('/admin')->namespace('Admin')->name('admin.')->group(function(){
     });
     
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

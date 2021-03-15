@@ -19,10 +19,10 @@
                 <a href="#" class="dropdown-item">
                     <!-- Message Start -->
                     <div class="media align-items-center">
-                        <img src="dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+                        <img src="{{auth()->user()->getPhotoUrl()}}" alt="{{auth()->user()->name}}" class="img-size-50 mr-3 img-circle">
                         <div class="media-body">
                             <h3 class="dropdown-item-title">
-                                Brad Diesel
+                                {{auth()->user()->name}}
                             </h3>
                         </div>
                     </div>
@@ -33,9 +33,17 @@
                     <i class="fas fa-user"></i> @lang('Your Profile')
                 </a>
                 <div class="dropdown-divider"></div>
-                <a href="login.html" class="dropdown-item">
+                <a 
+                    href="{{ route('logout') }}" 
+                    class="dropdown-item"                    
+                    onclick="event.preventDefault();
+                            document.getElementById('logout-form').submit();"
+                    >
                     <i class="fas fa-sign-out-alt"></i> @lang('Log Out')
                 </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
             </div>
         </li>
     </ul>
