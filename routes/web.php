@@ -51,8 +51,18 @@ Route::middleware('auth')->prefix('/admin')->namespace('Admin')->name('admin.')-
         Route::post('/delete','TagsController@delete')->name('delete');
     });
     
+    //Routes for CategoriesController
+    Route::prefix('/categories')->name('categories.')->group(function(){
+        Route::get('/','CategoriesController@index')->name('index');
+        Route::post('/datatable','CategoriesController@datatable')->name('datatable');
+        Route::get('/create','CategoriesController@create')->name('create');
+        Route::post('/store','CategoriesController@store')->name('store');
+        Route::get('/edit/{category}','CategoriesController@edit')->name('edit');
+        Route::post('/update/{category}','CategoriesController@update')->name('update');
+        Route::post('/change-priorities','CategoriesController@changePriorities')->name('change_priorities');
+        Route::post('/delete','CategoriesController@delete')->name('delete');
+    });
+    
 });
 
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');

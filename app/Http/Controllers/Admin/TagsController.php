@@ -78,9 +78,13 @@ class TagsController extends Controller
         
         $tag->save();
         
-        session()->flash('system_message',__('Tag has been changed successfully!!'));
+        //session()->flash('system_message',__('Tag has been changed successfully!!'));
+        
+        return response()->json([
+            'system_message' => __('Tag has been changed successfully!!')          
+        ]);
             
-        return redirect()->route('admin.tags.index');
+        //return redirect()->route('admin.tags.index');
     }
 
     public function delete(Request $request) 

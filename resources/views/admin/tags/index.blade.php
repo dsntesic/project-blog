@@ -33,7 +33,7 @@
                                     <th style="width: 10px">#</th>
                                     <th>@lang('Name')</th>
                                     <th class="text-center">@lang('Created At')</th>
-                                    <th class="text-center">@lang('Updated At')</th>
+                                    <th class="text-center">@lang('Last Change')</th>
                                     <th class="text-center">@lang('Actions')</th>
                                 </tr>
                             </thead>
@@ -61,57 +61,57 @@
 @endsection
 @push('footer_javascript')
 <script type="text/javascript">
-let entitiesDatatable = $('#entity-list').DataTable({
-    "serverSide": true,
-    "processing": true,
-    "ajax": {
-       "url": "{{route('admin.tags.datatable')}}",
-       "type": "POST",       
-       "data": {
-           "_token" : "{{csrf_token()}}"
-       }      
-    },
-    "lengthMenu": [5, 10, 25, 50, 75, 100 ],
-    "order": [[ 2, 'desc' ]],
-    "columns": [
-        {"name": "id", "data": "id"},    
-        {"name": "name", "data": "name"},      
-        {"name": "created_at", "data": "created_at", "className": "text-center"},      
-        {"name": "updated_at", "data": "updated_at", "className": "text-center"},      
-        {"name": "actions", "data": "actions", "searchable": false, "orderable":false, "className": "text-center"}      
-    ]
-});
-$('#entity-list').on('click', "[data-action='delete']", function (e) {
-
-    let tagId = $(this).data('id');
-    let tagName = $(this).data('name');
-
-    $("#custom-modal").attr('action',"{{route('admin.tags.delete')}}");
-    $("#custom-modal input[name='id']").val(tagId);
-    $("#custom-modal .modal-header .modal-title").text("@lang('Ban Tag')");
-    $("#custom-modal [data-modal-body='text']").text("@lang('Are you sure you want to delete tag?')");
-    $("#custom-modal [data-modal-body='name']").text(tagName);
-    $("#custom-modal .modal-footer [type='submit']").text("@lang('Delete')");
-    $("#custom-modal .modal-footer [type='submit']").addClass('btn-danger');
-});
-
-$('#custom-modal').on('submit',function(e){
-    e.preventDefault();
-    e.stopPropagation();
-    $(this).modal('hide');
-    $.ajax({
-        "url":$(this).attr('action'),
-        "type":$(this).attr('method'),
-        "data":$(this).serialize()
-    })
-    .done(function(response){
-        toastr.success(response.system_message); 
-        entitiesDatatable.ajax.reload(null,false);
-    })
-    .fail(function(){
-        toastr.error("@lang('Some error occured while changing tag')");
+    let entitiesDatatable = $('#entity-list').DataTable({
+        "serverSide": true,
+        "processing": true,
+        "ajax": {
+           "url": "{{route('admin.tags.datatable')}}",
+           "type": "POST",       
+           "data": {
+               "_token" : "{{csrf_token()}}"
+           }      
+        },
+        "lengthMenu": [5, 10, 25, 50, 75, 100 ],
+        "order": [[ 2, 'desc' ]],
+        "columns": [
+            {"name": "id", "data": "id"},    
+            {"name": "name", "data": "name"},      
+            {"name": "created_at", "data": "created_at", "className": "text-center"},      
+            {"name": "updated_at", "data": "updated_at", "className": "text-center"},      
+            {"name": "actions", "data": "actions", "searchable": false, "orderable":false, "className": "text-center"}      
+        ]
     });
-});
+    $('#entity-list').on('click', "[data-action='delete']", function (e) {
+
+        let tagId = $(this).data('id');
+        let tagName = $(this).data('name');
+
+        $("#custom-modal").attr('action',"{{route('admin.tags.delete')}}");
+        $("#custom-modal input[name='id']").val(tagId);
+        $("#custom-modal .modal-header .modal-title").text("@lang('Ban Tag')");
+        $("#custom-modal [data-modal-body='text']").text("@lang('Are you sure you want to delete tag?')");
+        $("#custom-modal [data-modal-body='name']").text(tagName);
+        $("#custom-modal .modal-footer [type='submit']").text("@lang('Delete')");
+        $("#custom-modal .modal-footer [type='submit']").addClass('btn-danger');
+    });
+
+    $('#custom-modal').on('submit',function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).modal('hide');
+        $.ajax({
+            "url":$(this).attr('action'),
+            "type":$(this).attr('method'),
+            "data":$(this).serialize()
+        })
+        .done(function(response){
+            toastr.success(response.system_message); 
+            entitiesDatatable.ajax.reload(null,false);
+        })
+        .fail(function(){
+            toastr.error("@lang('Some error occured while changing tag')");
+        });
+    });
 </script>
 @endpush
 
