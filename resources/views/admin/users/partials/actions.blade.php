@@ -34,6 +34,6 @@
     @endif
 </div>
 @else
-That's you
+@lang('That is you')
 @endif
 

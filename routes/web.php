@@ -40,6 +40,17 @@ Route::middleware('auth')->prefix('/admin')->namespace('Admin')->name('admin.')-
         Route::post('/delete-photo','ProfileController@deletePhoto')->name('delete_photo');
     });
     
+    //Routes for TagsController
+    Route::prefix('/tags')->name('tags.')->group(function(){
+        Route::get('/','TagsController@index')->name('index');
+        Route::post('/datatable','TagsController@datatable')->name('datatable');
+        Route::get('/create','TagsController@create')->name('create');
+        Route::post('/store','TagsController@store')->name('store');
+        Route::get('/edit/{tag}','TagsController@edit')->name('edit');
+        Route::post('/update/{tag}','TagsController@update')->name('update');
+        Route::post('/delete','TagsController@delete')->name('delete');
+    });
+    
 });
 
 Auth::routes();

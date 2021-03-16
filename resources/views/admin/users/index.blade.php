@@ -58,7 +58,7 @@
                 </div>
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">All Users</h3>
+                        <h3 class="card-title">@lang('All Users')</h3>
                         <div class="card-tools">
 
                         </div>
