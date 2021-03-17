@@ -10,6 +10,17 @@ class Category extends Model
     
     protected $fillable = ['name','description'];
     
+    
+    public function blogPosts() 
+    {
+        /**
+        * Get the blog posts for the category.
+        */
+       return $this->hasMany(
+               BlogPost::class,
+               'category_id',
+               'id');
+    }
     /**
      * A function that returns a url for a form action 
      * @return string

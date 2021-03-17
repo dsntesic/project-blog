@@ -45,6 +45,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
     
+    
+    public function blogPosts() 
+    {
+        return $this->hasMany(
+                BlogPost::class,
+                'user_id',
+                'id');
+    }
     /**
      *The function returns the url to the photo 
      * @return string

@@ -24,17 +24,17 @@ class UsersController extends Controller {
         $query = User::query()
                 ->filterSearchTerm($searchTerm);
         return DataTables::of($query)
-                        ->addColumn('status', function($user) {
-                            return view('admin.users.partials.status', ['user' => $user]);
-                        })
-                        ->addColumn('photo', function($user) {
-                            return view('admin.users.partials.photo', ['user' => $user]);
-                        })
                         ->addColumn('actions', function($user) {
                             return view('admin.users.partials.actions', ['user' => $user]);
                         })
                         ->editColumn('id', function($user) {
                             return '#' . $user->id;
+                        })
+                        ->editColumn('photo', function($user) {
+                            return view('admin.users.partials.photo', ['user' => $user]);
+                        })
+                        ->editColumn('status', function($user) {
+                            return view('admin.users.partials.status', ['user' => $user]);
                         })
                         ->editColumn('name', function($user) {
                             return '<strong>' . $user->name . '</strong>';
@@ -170,7 +170,7 @@ class UsersController extends Controller {
         $photoName = $user->id . '-' . \Str::slug($request->name) .  '.' . $photoFile->extension();        
         $photoFile->move(public_path('/storage/users/'),$photoName);
         \Image::make(public_path("/storage/users/$photoName"))
-                ->fit(300,300)
+                ->fit(256,256)
                 ->save();
         return $photoName;
     }

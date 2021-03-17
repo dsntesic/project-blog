@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 use App\Models\Tag;
+use Illuminate\Support\Facades\DB;
+
 class TagsTableSeeder extends Seeder
 {
     /**

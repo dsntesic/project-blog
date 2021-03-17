@@ -63,6 +63,21 @@ Route::middleware('auth')->prefix('/admin')->namespace('Admin')->name('admin.')-
         Route::post('/delete','CategoriesController@delete')->name('delete');
     });
     
+    //Routes for BlogPostsController
+    Route::prefix('/blog-posts')->name('blog_posts.')->group(function(){
+        Route::get('/','BlogPostsController@index')->name('index');
+        Route::post('/datatable','BlogPostsController@datatable')->name('datatable');
+        Route::get('/create','BlogPostsController@create')->name('create');
+        Route::post('/store','BlogPostsController@store')->name('store');
+        Route::get('/edit/{blogPost}','BlogPostsController@edit')->name('edit');
+        Route::post('/update/{blogPost}','BlogPostsController@update')->name('update');
+        Route::post('/enable','BlogPostsController@enable')->name('enable');
+        Route::post('/disable','BlogPostsController@disable')->name('disable');
+        Route::post('/important','BlogPostsController@important')->name('important');
+        Route::post('/no-important','BlogPostsController@noImportant')->name('no_important');
+        Route::post('/delete','BlogPostsController@delete')->name('delete');
+    });
+    
 });
 
 Auth::routes();

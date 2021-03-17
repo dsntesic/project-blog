@@ -28,10 +28,10 @@ class CategoriesController extends Controller
                             return view('admin.categories.partials.sortable_id', ['category' => $category]);
                         })
                         ->editColumn('name', function($category) {
-                            return '<strong>' . $category->name . '</strong>';
+                            return '<strong>' . e($category->name) . '</strong>';
                         })
                         ->editColumn('description', function($category) {
-                            return \Str::limit($category->description,50);
+                            return \Str::limit(e($category->description),50);
                         })
                         ->rawColumns(['id','name', 'description','actions'])
                         ->make(true);
@@ -133,7 +133,7 @@ class CategoriesController extends Controller
             ->decrement('priority');
         
         return response()->json([
-            'system_message' => __('Category photo has been deleted')          
+            'system_message' => __('Category has been deleted')          
         ]);
     }
 

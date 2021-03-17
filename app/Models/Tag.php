@@ -12,7 +12,16 @@ class Tag extends Model
 
 
 
-
+    public function blog_posts() 
+    {
+        return $this->belongsToMany(
+                BlogPost::class,
+                'blog_post_tags',
+                'tag_id', 
+                'blog_post_id',
+                'id');
+    }
+    
     /**
      * A function that returns a url for a form action 
      * @return string

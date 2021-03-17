@@ -166,6 +166,7 @@ return [
          * Package Service Providers...
          */
         Intervention\Image\ImageServiceProvider::class,
+        Barryvdh\Elfinder\ElfinderServiceProvider::class,
         /*
          * Application Service Providers...
          */
