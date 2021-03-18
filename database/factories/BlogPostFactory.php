@@ -11,6 +11,7 @@ $factory->define(BlogPost::class, function (Faker $faker) {
     $userRandomId = User::pluck('id')->random();
     $categoryRandomId = Category::pluck('id')->random();
     return [
+        'photo' => $faker->imageUrl(640,450),
         'name' => $faker->realText(rand(20,255)),
         'description' => $faker->realText(rand(50,500)),
         'user_id' => $userRandomId,

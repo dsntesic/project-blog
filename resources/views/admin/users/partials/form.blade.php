@@ -57,7 +57,6 @@
                         ])    
                     </div>
                 </div>
-
                 <div class="form-group">
                     <label>@lang('Choose New Photo')</label>
                     <input type="file" name='photo' class="form-control @error('photo') is-invalid @enderror">
@@ -67,7 +66,7 @@
                 </div>
             </div>
             <div class="offset-md-3 col-md-3">
-                @if($user->id)
+                @if($user->exists)
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">

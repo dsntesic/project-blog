@@ -1,16 +1,16 @@
 @extends('admin._layout.layout')
 
-@section('seo_title',__('All categories'))
+@section('seo_title',__('All sliders'))
 
 @push('head_links')
 <link href="{{url('/themes/admin/plugins/jquery-ui/jquery-ui.min.css')}}" rel="stylesheet" type="text/css"/>
 <link href="{{url('/themes/admin/plugins/jquery-ui/jquery-ui.theme.min.css')}}" rel="stylesheet" type="text/css"/>
 @endpush
 
-@section('title',__('Categories'))
+@section('title',__('Sliders'))
 
 @section('breadcrump')
-<li class="breadcrumb-item active">@lang('Categories')</li>
+<li class="breadcrumb-item active">@lang('Sliders')</li>
 @endsection
 
 @section('content')
@@ -21,11 +21,11 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">@lang('All Categories')</h3>
+                        <h3 class="card-title">@lang('All Sliders')</h3>
                         <div class="card-tools">
-                            <form  style='display:none' id="change-priority-form" class="btn-group" action="{{route('admin.categories.change_priorities')}}" method="post">
+                            <form  style='display:none' id="change-priority-form" class="btn-group" action="{{route('admin.sliders.change_priorities')}}" method="post">
                                 @csrf
-                                <input type="hidden" name="category_ids" value="">                               
+                                <input type="hidden" name="slider_ids" value="">
                                 <input type="hidden" data-page='page' name="page" value="">
                                 <input type="hidden" data-lenght='length' name="length" value="">
 
@@ -42,9 +42,9 @@
                                 <i class="fas fa-sort"></i>
                                 @lang('Change Order')
                             </button>
-                            <a href="{{route('admin.categories.create')}}" class="btn btn-success">
+                            <a href="{{route('admin.sliders.create')}}" class="btn btn-success">
                                 <i class="fas fa-plus-square"></i>
-                                @lang('Create new Category')
+                                @lang('Create new Slider')
                             </a>
                         </div>
                     </div>
@@ -57,7 +57,6 @@
                                     <th style="width: 10px">#</th>
                                     <th class="text-center">@lang('Priority')</th>
                                     <th style="width: 30%;">@lang('Name')</th>
-                                    <th style="width: 30%;">@lang('Description')</th>
                                     <th class="text-center">@lang('Created At')</th>
                                     <th class="text-center">@lang('Last Change')</th>
                                     <th class="text-center">@lang('Actions')</th>
@@ -101,7 +100,7 @@ $('#change-priority-form').on('submit',function(e){
         entitiesDatatable.ajax.reload(null, false);
     })
     .fail(function () {
-        toastr.error("@lang('Some error occured while changing priority of category')");
+        toastr.error("@lang('Some error occured while changing priority of slider')");
     });
     
 });
@@ -111,7 +110,7 @@ $("#sortable-list").sortable({
         let priorities = $("#sortable-list").sortable("toArray", {
             "attribute": "data-id"
         });
-        $("#change-priority-form [name='category_ids']").val(priorities.join(","));
+        $("#change-priority-form [name='slider_ids']").val(priorities.join(","));
     }
 });
 $('[data-action="show-order"]').on('click', function () {
@@ -134,15 +133,15 @@ $('[data-action="hide-order"]').on('click', function () {
 let entitiesDatatable = $('#entity-list').on('processing.dt', function () {
     $('#sortable-list .handle').hide();
     $('[data-action="show-order"]').show();
-    $('#change-priority-form').hide();
+    $('#change-priority-form').hide();  
 }).DataTable({
     "serverSide": true,
     "processing": true,
     "ajax": {
-        "url": "{{route('admin.categories.datatable')}}",
+        "url": "{{route('admin.sliders.datatable')}}",
         "type": "POST",
-        "data": {
-            "_token": "{{csrf_token()}}"
+        "data": function (dtData) {
+            dtData._token = "{{csrf_token()}}";
         }
     },
     "lengthMenu": [5, 10, 25, 50, 75, 100],
@@ -151,7 +150,6 @@ let entitiesDatatable = $('#entity-list').on('processing.dt', function () {
         {"name": "id", "data": "id"},
         {"name": "priority", "data": "priority"},
         {"name": "name", "data": "name"},
-        {"name": "description", "data": "description"},
         {"name": "created_at", "data": "created_at", "className": "text-center"},
         {"name": "updated_at", "data": "updated_at", "className": "text-center"},
         {"name": "actions", "data": "actions", "searchable": false, "orderable": false, "className": "text-center"}
@@ -161,16 +159,45 @@ let entitiesDatatable = $('#entity-list').on('processing.dt', function () {
         $(row).attr('data-id', dataValue);
     }
 });
+
+$('#entity-list').on('click', "[data-action='enable']", function (e) {
+
+    let sliderId = $(this).data('id');
+    let sliderName = $(this).data('name');
+
+    $("#custom-modal").attr('action', "{{route('admin.sliders.enable')}}");
+    $("#custom-modal input[name='id']").val(sliderId);
+    $("#custom-modal .modal-header .modal-title").text("@lang('Enable Slider')");
+    $("#custom-modal [data-modal-body='text']").text("@lang('Are you sure you want to enable Slider?')");
+    $("#custom-modal [data-modal-body='name']").text(sliderName);
+    $("#custom-modal .modal-footer [type='submit']").text("@lang('Enable')");
+    $("#custom-modal .modal-footer [type='submit']").addClass('btn-success').removeClass('btn-danger');
+});
+
+$('#entity-list').on('click', "[data-action='disable']", function (e) {
+
+    let sliderId = $(this).data('id');
+    let sliderName = $(this).data('name');
+
+    $("#custom-modal").attr('action', "{{route('admin.sliders.disable')}}");
+    $("#custom-modal input[name='id']").val(sliderId);
+    $("#custom-modal .modal-header .modal-title").text("@lang('Disable Slider')");
+    $("#custom-modal [data-modal-body='text']").text("@lang('Are you sure you want to disable Slider?')");
+    $("#custom-modal [data-modal-body='name']").text(sliderName);
+    $("#custom-modal .modal-footer [type='submit']").text("@lang('Disable')");
+    $("#custom-modal .modal-footer [type='submit']").addClass('btn-danger').removeClass('btn-success');
+});
+    
 $('#entity-list').on('click', "[data-action='delete']", function (e) {
 
-    let categoryId = $(this).data('id');
-    let categoryName = $(this).data('name');
+    let sliderId = $(this).data('id');
+    let sliderName = $(this).data('name');
 
-    $("#custom-modal").attr('action', "{{route('admin.categories.delete')}}");
-    $("#custom-modal input[name='id']").val(categoryId);
-    $("#custom-modal .modal-header .modal-title").text("@lang('Delete Category')");
-    $("#custom-modal [data-modal-body='text']").text("@lang('Are you sure you want to delete category?')");
-    $("#custom-modal [data-modal-body='name']").text(categoryName);
+    $("#custom-modal").attr('action', "{{route('admin.sliders.delete')}}");
+    $("#custom-modal input[name='id']").val(sliderId);
+    $("#custom-modal .modal-header .modal-title").text("@lang('Delete Slider')");
+    $("#custom-modal [data-modal-body='text']").text("@lang('Are you sure you want to delete slider?')");
+    $("#custom-modal [data-modal-body='name']").text(sliderName);
     $("#custom-modal .modal-footer [type='submit']").text("@lang('Delete')");
     $("#custom-modal .modal-footer [type='submit']").addClass('btn-danger');
 });
@@ -189,7 +216,7 @@ $('#custom-modal').on('submit', function (e) {
         entitiesDatatable.ajax.reload(null, false);
     })
     .fail(function () {
-        toastr.error("@lang('Some error occured while deleting category')");
+        toastr.error("@lang('Some error occured while deleting slider')");
     });
 });
 </script>

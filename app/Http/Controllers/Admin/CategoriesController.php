@@ -95,22 +95,17 @@ class CategoriesController extends Controller
     
     public function changePriorities(Request $request) 
     {   
-        $formData = $request->validate([
+         $formData = $request->validate([
                 'category_ids' => ['required','string'],
-                'priorities' => ['required','string'],
+                'page' => ['required','numeric'],
+                'length' => ['required','numeric'],
         ]);
         
-        $combineCategoryIdsPriorities = array_combine(
-                                            explode(',',$formData['category_ids']), 
-                                            explode(',',$formData['priorities'])
-        );
+        $categoryIds = explode(',',$formData['category_ids']);
         
-        foreach ($combineCategoryIdsPriorities as $id => $priority) {
+        foreach ($categoryIds as $key => $id) {
             $category = Category::findOrFail($id);
-            if($category->priority == $priority){
-                continue;
-            }
-            $category->priority = $priority;
+            $category->priority = $formData['page'] * $formData['length'] + $key + 1;
             $category->save();
         }
             

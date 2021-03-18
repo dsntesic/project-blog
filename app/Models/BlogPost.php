@@ -8,16 +8,22 @@ use App\User;
 class BlogPost extends Model {
 
     protected $table = 'blog_posts';
+    
     protected $fillable = ['name', 'description', 'content', 'category_id'];
 
     const STATUS_ENABLE = 1;
+    
     const STATUS_DISABLE = 0;
+    
     const STATUS_ALL = [
         self::STATUS_ENABLE,
         self::STATUS_DISABLE,
     ];
+    
     const IMPORTANT_YES = 1;
+    
     const IMPORTANT_NO = 0;
+    
     const IMPORTANT = [
         self::IMPORTANT_YES,
         self::IMPORTANT_NO,
@@ -58,9 +64,12 @@ class BlogPost extends Model {
      */
     public function getPhotoThumbUrl() {
         if ($this->photo) {
-            return '/storage/blog_posts/thumbs/' . $this->photo;
+            if(is_file(public_path('/storage/blog_posts/thumbs/' . $this->photo))){
+                return '/storage/blog_posts/thumbs/' . $this->photo;
+            }
+            return $this->photo;
         }
-        return 'https://via.placeholder.com/256';
+        return url('https://via.placeholder.com/256');
     }
 
     /**
@@ -69,9 +78,12 @@ class BlogPost extends Model {
      */
     public function getPhotoUrl() {
         if ($this->photo) {
-            return '/storage/blog_posts/' . $this->photo;
+            if(is_file(public_path('/storage/blog_posts/' . $this->photo))){
+                return '/storage/blog_posts/' . $this->photo;
+            }
+            return $this->photo;
         }
-        return 'https://via.placeholder.com/500';
+        return url('https://via.placeholder.com/640');
     }
 
     /**
@@ -79,7 +91,7 @@ class BlogPost extends Model {
      * @return string
      */
     public function getActionUrl() {
-        if ($this->id) {
+        if ($this->exists) {
             return route('admin.blog_posts.update', [
                 'blogPost' => $this->id
             ]);
@@ -158,6 +170,17 @@ class BlogPost extends Model {
             });
         }
         return $query;
+    }
+    
+    /**
+     * Scope a query to only include latest enable blog post.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeLatestBlogPostWithStatusEnable($query) {
+        return $query->where('status', self::STATUS_ENABLE)
+                     ->latest();
     }
 
 }

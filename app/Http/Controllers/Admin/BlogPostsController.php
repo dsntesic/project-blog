@@ -99,7 +99,7 @@ class BlogPostsController extends Controller
     
     public function store(Request $request) 
     {
-        $formData = $request->validate($this->validationRules());
+        $formData = $request->validate($this->validationRules(new BlogPost()));
         
         $newBlogPost = new BlogPost($formData);
         
@@ -235,8 +235,8 @@ class BlogPostsController extends Controller
         ]);
     }
     
-    protected function validationRules(BlogPost $blogPost = null) {
-        $validationPhoto = $blogPost?'nullable':'required';
+    protected function validationRules(BlogPost $blogPost) {
+        $validationPhoto = $blogPost->exists?'nullable':'required';
         return [
             
             'photo' => [$validationPhoto , 'image','max:65000'],
@@ -271,9 +271,15 @@ class BlogPostsController extends Controller
         $photoFile = $request->file('photo');
         $photoName = $blogPost->id . '-' . \Str::slug($request->name) .  '.' . $photoFile->extension();        
         $photoFile->move(public_path('/storage/blog_posts/'),$photoName);
+        
         \Image::make(public_path("/storage/blog_posts/$photoName"))
-                ->fit(256,256)
-                ->save(public_path("/storage/blog_posts/thumbs/$photoName"));
+        ->fit(256,256)
+        ->save(public_path("/storage/blog_posts/thumbs/$photoName"));
+        
+        \Image::make(public_path("/storage/blog_posts/$photoName"))
+                ->fit(640,450)
+                ->save();
+
         return $photoName;
     }
 

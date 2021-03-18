@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+    
+    <!-- Head-->
     @include('admin._layout.partials.head')
+    <!-- /.head -->
     <body class="hold-transition sidebar-mini">
         <div class="wrapper">
             

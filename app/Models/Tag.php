@@ -28,7 +28,7 @@ class Tag extends Model
      */
     public function getActionUrl() 
     {
-        if($this->id){
+        if($this->exists){
             return route('admin.tags.update', [
                 'tag' => $this->id
             ]);

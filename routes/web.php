@@ -78,6 +78,41 @@ Route::middleware('auth')->prefix('/admin')->namespace('Admin')->name('admin.')-
         Route::post('/delete','BlogPostsController@delete')->name('delete');
     });
     
+    //Routes for SlidersController
+    Route::prefix('/sliders')->name('sliders.')->group(function(){
+        Route::get('/','SlidersController@index')->name('index');
+        Route::post('/datatable','SlidersController@datatable')->name('datatable');
+        Route::get('/create','SlidersController@create')->name('create');
+        Route::post('/store','SlidersController@store')->name('store');
+        Route::get('/edit/{slider}','SlidersController@edit')->name('edit');
+        Route::post('/update/{slider}','SlidersController@update')->name('update');
+        Route::post('/enable','SlidersController@enable')->name('enable');
+        Route::post('/disable','SlidersController@disable')->name('disable');       
+        Route::post('/change-priorities','SlidersController@changePriorities')->name('change_priorities');
+        Route::post('/delete','SlidersController@delete')->name('delete');
+    });
+    
+});
+
+//Front routes
+
+Route::name('front.')->group(function(){
+    
+    //Routes for IndexController
+    Route::get('/','IndexController@index')->name('index.index');
+    
+    //Routes for UsersController
+    Route::prefix('/users')->name('users.')->group(function(){
+        Route::get('/','UsersController@index')->name('index');
+        Route::post('/datatable','UsersController@datatable')->name('datatable');
+        Route::get('/create','UsersController@create')->name('create');
+        Route::post('/store','UsersController@store')->name('store');
+        Route::get('/edit/{user}','UsersController@edit')->name('edit');
+        Route::post('/update/{user}','UsersController@update')->name('update');
+        Route::post('/delete-photo','UsersController@deletePhoto')->name('delete_photo');
+        Route::post('/active','UsersController@active')->name('active');
+        Route::post('/ban','UsersController@ban')->name('ban');
+    });  
 });
 
 Auth::routes();

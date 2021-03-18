@@ -27,7 +27,7 @@ class Category extends Model
      */
     public function getActionUrl() 
     {
-        if($this->id){
+        if($this->exists){
             return route('admin.categories.update', [
                 'category' => $this->id
             ]);
@@ -41,10 +41,13 @@ class Category extends Model
      */
     public static function getPriorityForCategory() 
     {
-       $lastInsertedCategory = self::query()
+        $lastInsertedCategory = self::query()
                                         ->orderBy('priority','DESC')
                                         ->first();
-       return $lastInsertedCategory -> priority + 1;
+        if(!$lastInsertedCategory){
+            return 1;
+        }
+        return $lastInsertedCategory -> priority + 1;
     }
 }
 

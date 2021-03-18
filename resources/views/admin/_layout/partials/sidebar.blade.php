@@ -104,6 +104,29 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon far fa-plus-square"></i>
+                        <p>
+                            @lang('Sliders')
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{route('admin.sliders.index')}}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>@lang('Sliders list')</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{route('admin.sliders.create')}}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>@lang('Create Slider')</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

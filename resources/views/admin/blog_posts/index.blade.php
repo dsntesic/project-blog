@@ -272,13 +272,13 @@
             "type": $(this).attr('method'),
             "data": $(this).serialize()
         })
-                .done(function (response) {
-                    toastr.success(response.system_message);
-                    entitiesDatatable.ajax.reload(null, false);
-                })
-                .fail(function () {
-                    toastr.error("@lang('Some error occured while changing Blog Post')");
-                });
+        .done(function (response) {
+            toastr.success(response.system_message);
+            entitiesDatatable.ajax.reload(null, false);
+        })
+        .fail(function () {
+            toastr.error("@lang('Some error occured while changing Blog Post')");
+        });
     });
 </script>
 @endpush

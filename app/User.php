@@ -59,8 +59,8 @@ class User extends Authenticatable
      */
     public function getPhotoUrl() 
     {
-        if($this->photo){
-            return '/storage/users/' . $this->photo;
+    if ($this->photo && is_file(public_path('/storage/users/' . $this->photo))) {
+            return '/storage/sliders/' . $this->photo;            
         }
         return 'https://via.placeholder.com/200';
     }
@@ -89,7 +89,7 @@ class User extends Authenticatable
      */
     public function getActionUrl() 
     {
-        if($this->id){
+        if($this->exists){
             return route('admin.users.update', [
                 'user' => $this->id
             ]);

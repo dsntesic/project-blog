@@ -5,7 +5,7 @@
     role="form" 
     id='entity-form'
     enctype="multipart/form-data"
->
+    >
     @csrf
     <div class="card-body">
         <div class="row">
@@ -55,7 +55,7 @@
                 </div>
                 <div class="form-group">
                     <label>@lang('Category')</label>
-                    <select name='category_id' class="form-control">
+                    <select name='category_id' class="form-control @error('category_id') is-invalid @enderror">
                         <option value="">-- @lang('Choose Category') --</option>
                         @foreach($categories as $category)
                         <option 
@@ -67,7 +67,7 @@
                         @endforeach
                     </select>
                     @include('admin._layout.partials.form_errors',[
-                        'fieldName' => 'category_id'
+                    'fieldName' => 'category_id'
                     ])
                 </div>
                 <div class="form-group">
@@ -77,7 +77,7 @@
                         class="form-control @error('tag_id') is-invalid @enderror" 
                         multiple
                         data-placeholder="@lang('Select a Tags')"
-                    >
+                        >
                         @foreach($tags as $tag)
                         <option 
                             value="{{$tag->id}}"
@@ -91,12 +91,12 @@
                         @endforeach
                     </select>
                     @include('admin._layout.partials.form_errors',[
-                        'fieldName' => 'tag_id'
+                    'fieldName' => 'tag_id'
                     ])
                 </div>               
             </div>
             <div class="offset-md-3 col-md-3">
-                @if($blogPost->id)
+                @if($blogPost->exists)
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
@@ -122,48 +122,48 @@
 <script src="{{url('/themes/admin/plugins/ckeditor/ckeditor.js')}}" type="text/javascript"></script>
 <script src="{{url('/themes/admin/plugins/ckeditor/adapters/jquery.js')}}" type="text/javascript"></script>
 <script type="text/javascript">
-    $('#content-textarea').ckeditor({
-        "height": "400px"
-    });
-    //select name=product_category_id
-    $('#entity-form [name="category_id"]').select2({
-        "theme": "bootstrap4"
-    });
-    
-    $('#entity-form [name="tag_id[]"]').select2({
-        "theme": "bootstrap4"
-    });
-    $('#entity-form').validate({
-        "highlight": function (element) {
-            $(element).addClass('is-invalid').removeClass('is-valid');
+$('#content-textarea').ckeditor({
+    "height": "400px"
+});
+//select name=product_category_id
+$('#entity-form [name="category_id"]').select2({
+    "theme": "bootstrap4"
+});
+
+$('#entity-form [name="tag_id[]"]').select2({
+    "theme": "bootstrap4"
+});
+$('#entity-form').validate({
+    "highlight": function (element) {
+        $(element).addClass('is-invalid').removeClass('is-valid');
+    },
+    "unhighlight": function (element) {
+        $(element).addClass('is-valid').removeClass('is-invalid');
+    },
+    "rules": {
+        "name": {
+            "required": true,
+            "rangelength": [20, 255]
         },
-        "unhighlight": function (element) {
-            $(element).addClass('is-valid').removeClass('is-invalid');
+        "photo": {
         },
-        "rules": {
-            "name": {
-                "required": true,
-                "rangelength": [20, 255]
-            },
-            "photo": {
-            },
-            "description": {
-                "required": true,
-                "rangelength": [50, 500]
-            },
-            "content": {
-            },
-            "category_id": {
-                "required": true
-            },
-            "tag_id[]": {
-                "required": true               
-            }
+        "description": {
+            "required": true,
+            "rangelength": [50, 500]
         },
-        "errorElement": "span",
-        "errorPlacement": function (error, element) {
-            error.appendTo($(element).closest('.form-group').find('.invalid-feedback'));
+        "content": {
+        },
+        "category_id": {
+            "required": true
+        },
+        "tag_id[]": {
+            "required": true
         }
-    });
+    },
+    "errorElement": "span",
+    "errorPlacement": function (error, element) {
+        error.appendTo($(element).closest('.form-group').find('.invalid-feedback'));
+    }
+});
 </script>
 @endpush
