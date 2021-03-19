@@ -22,15 +22,15 @@
             <div class="col-md-4">
                 <div class="menus d-flex">
                     <ul class="list-unstyled">
-                        <li> <a href="index.html">@lang('Home')</a></li>
-                        <li> <a href="blog.html">@lang('Blog')</a></li>
-                        <li> <a href="contact.html">@lang('Contact')</a></li>
+                        <li> <a href="{{route('front.index.index')}}">@lang('Home')</a></li>
+                        <li> <a href="{{route('front.blog_posts.index')}}">@lang('Blog')</a></li>
+                        <li> <a href="{{route('front.contact.index')}}">@lang('Contact')</a></li>
                         <li> <a href="{{route('login')}}">@lang('Login')</a></li>
                     </ul>
-                    @if($footerCategories->count() > 0)
+                    @if($frontCategories->count() > 0)
                     <ul class="list-unstyled">
-                        @foreach($footerCategories as $category)
-                            
+                        @foreach($frontCategories as $category)
+                            @break($loop->iteration == 5)
                             <li> <a href="">{{$category->name}}</a></li>
                         @endforeach
                     </ul>
@@ -48,8 +48,8 @@
                                     <img src="{{$blogPost->getPhotoThumbUrl()}}" alt="{{$blogPost->name}}" class="img-fluid">
                                 </div>
                                 <div class="title">
-                                    <strong>{{\Str::limit($blogPost->name,30)}}</strong>
-                                    <span class="date last-meta">{{\Carbon\Carbon::parse($blogPost->created_at)->format('F d, Y')}}</span>
+                                    <strong>{{$blogPost->getStrName()}}</strong>
+                                    <span class="date last-meta">{{$blogPost->getFooterFormatDate()}}</span>
                                 </div>
                             </div>
                         </a>

@@ -5,7 +5,7 @@
     role="form" 
     id='entity-form'    
     enctype="multipart/form-data"
->
+    >
     @csrf
     <div class="card-body">
         <div class="row">
@@ -31,7 +31,7 @@
                         value="{{old('button_url',$slider->button_url)}}"
                         class="form-control @error('button_url') is-invalid @enderror" 
                         placeholder="@lang('Enter button url')"
-                    >
+                        >
                     @include('admin._layout.partials.form_errors',[
                     'fieldName' => 'button_url'
                     ])
@@ -44,7 +44,7 @@
                         value="{{old('button_title',$slider->button_title)}}"
                         class="form-control @error('button_title') is-invalid @enderror" 
                         placeholder="@lang('Enter button title')"
-                    >
+                        >
                     @include('admin._layout.partials.form_errors',[
                     'fieldName' => 'button_title'
                     ])
@@ -53,9 +53,23 @@
                     <label>@lang('Choose New Photo')</label>
                     <input type="file" name='photo' class="form-control @error('photo') is-invalid @enderror">
                     @include('admin._layout.partials.form_errors',[
-                        'fieldName' => 'photo'
+                    'fieldName' => 'photo'
                     ])
                 </div>
+            </div>
+            <div class="offset-md-3 col-md-3">
+                @if($slider->exists)
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>@lang('Photo')</label>
+                            <div class="text-center">
+                                <img src="{{$slider->getPhotoUrl()}}" alt="{{$slider->name}}" class="img-fluid" data-container='photo'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
     </div>
@@ -68,11 +82,11 @@
 </form>
 @push('footer_javascript')
 <script type="text/javascript">
-    jQuery.validator.addMethod('testUrl', function(value,element) { 
+    jQuery.validator.addMethod('testUrl', function (value, element) {
         return this.optional(element) || /url/.test(value) || /\//.test(value);
     }
     , 'Invalid url.Url must be url tupe or start with /'
-    );
+            );
     $('#entity-form').validate({
         "highlight": function (element) {
             $(element).addClass('is-invalid').removeClass('is-valid');
@@ -85,16 +99,15 @@
                 "required": true,
                 "maxlength": 50
             },
-            "button_url": {               
+            "button_url": {
                 "required": true,
                 "testUrl": true
             },
-            "button_title": {               
+            "button_title": {
                 "required": true,
                 "maxlength": 30
             },
             "photo": {
-                "required": true
             }
         },
         "errorElement": "span",

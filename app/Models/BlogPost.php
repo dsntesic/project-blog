@@ -98,6 +98,51 @@ class BlogPost extends Model {
         }
         return route('admin.blog_posts.store');
     }
+    
+    /**
+     * A function that returns a date in  format type e.g  1 day ago
+     * @return string
+     */
+    public function getFormatHumansDate() {
+        
+        return \Carbon\Carbon::parse($this->created_at)->diffForHumans();
+    }
+    
+    /**
+     * A function that returns a date in  format type e.g  January 1 | 2004
+     * @return string
+     */
+    public function getFormatDate() {
+        
+        return \Carbon\Carbon::parse($this->created_at)->format('F d | Y');
+    }
+    
+    /**
+     * A function that returns a date in  format type e.g  January 1 , 2004
+     * @return string
+     */
+    public function getFooterFormatDate() {
+        
+        return \Carbon\Carbon::parse($this->created_at)->format('F d , Y');
+    }
+    
+    /**
+     * A function that returns a limited name
+     * @return string
+     */
+    public function getStrName() {
+        
+        return \Str::limit($this->name,50);
+    }
+    /**
+     * A function that returns a limited description
+     * @return string
+     */
+    public function getStrDescription() {
+        
+        return \Str::limit($this->description,150);
+    }
+    
 
     /**
      * The function checks if the blog post is enable
@@ -121,17 +166,6 @@ class BlogPost extends Model {
      */
     public function isBlogPostImportant() {
         return ($this->important == self::IMPORTANT_YES) ? TRUE : FALSE;
-    }
-
-    /**
-     * 
-     * @return int
-     */
-    public static function getPriorityForCategory() {
-        $lastInsertedCategory = self::query()
-                ->orderBy('priority', 'DESC')
-                ->first();
-        return $lastInsertedCategory->priority + 1;
     }
 
     public function deletePhotoFromStorage() {
@@ -179,8 +213,24 @@ class BlogPost extends Model {
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeLatestBlogPostWithStatusEnable($query) {
+        
         return $query->where('status', self::STATUS_ENABLE)
                      ->latest();
+    }
+    
+    /**
+     * Scope a query to only include blog posts which contains the key word in its description, title, content.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFrontSearchBlogPost($query,$search) {
+        
+        return $query->where(function ($query) use ($search) {
+                        $query->orWhere('name','LIKE','%' . $search . '%')
+                              ->orWhere('description','LIKE','%' . $search . '%')
+                              ->orWhere('content','LIKE','%' . $search . '%');
+                     });
     }
 
 }

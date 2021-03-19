@@ -28,15 +28,14 @@ class IndexController extends Controller
                            ->latestBlogPostWithStatusEnable()
                            ->limit(12)
                            ->get();
-        $footerCategories = Category::query()
+        $frontCategories = Category::query()
                             ->orderBy('priority','ASC')
-                            ->limit(4)
                             ->get();
         return view('front.index.index',[
-            'footerCategories' => $footerCategories,
-            'latestBlogPosts' => $latestBlogPosts,
-            'featuredBlogPosts' => $featuredBlogPosts,
             'latestSliders' => $latestSliders,
+            'featuredBlogPosts' => $featuredBlogPosts,
+            'latestBlogPosts' => $latestBlogPosts,
+            'frontCategories' => $frontCategories,
         ]);
     }
 }

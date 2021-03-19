@@ -12,7 +12,7 @@ class Tag extends Model
 
 
 
-    public function blog_posts() 
+    public function blogPosts() 
     {
         return $this->belongsToMany(
                 BlogPost::class,

@@ -10,12 +10,12 @@ class Category extends Model
     
     protected $fillable = ['name','description'];
     
-    
+    /**
+    * Get the blog posts for the category.
+    */
     public function blogPosts() 
     {
-        /**
-        * Get the blog posts for the category.
-        */
+        
        return $this->hasMany(
                BlogPost::class,
                'category_id',

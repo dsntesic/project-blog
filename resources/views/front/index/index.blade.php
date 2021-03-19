@@ -1,26 +1,16 @@
 @extends('front._layout.layout')
 
-@section('seo_title',__('Welcome'))
+@push('head_css')
+ <!-- owl carousel 2 stylesheet-->
+    <link rel="stylesheet" href="{{url('/themes/front/plugins/owl-carousel2/assets/owl.carousel.min.css')}}" id="theme-stylesheet">
+    <link rel="stylesheet" href="{{url('/themes/front/plugins/owl-carousel2/assets/owl.theme.default.min.css')}}" id="theme-stylesheet">
+@endpush
 
 @section('content')
 <!-- Hero Section-->
-<div id="index-slider" class="owl-carousel">
-    @if($latestSliders->count() > 0)
-        @foreach($latestSliders as $slider)
-        <section style="background: url({{$slider->getPhotoUrl()}}); background-size: cover; background-position: center center" class="hero">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-7">
-                        <h1 style="height:100px">{{$slider->name}}</h1>
-                        <a href="{{$slider->getButtonUrl()}}" alt='{{$slider->name}}' class="hero-link">{{$slider->button_title}}</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-        @endforeach
-    @endif
-</div>
-
+@include('front.index.partials.sliders',[
+    'latestSliders' => $latestSliders
+])
 <!-- Intro Section-->
 <section class="intro">
     <div class="container">
@@ -32,62 +22,10 @@
         </div>
     </div>
 </section>
-<section class="featured-posts no-padding-top">
-    <div class="container">
-        @if($featuredBlogPosts->count() > 0)
-            @foreach($featuredBlogPosts as $blogPost)
-            <!-- Post-->
-            <div class="row d-flex align-items-stretch">
-                @if($loop->iteration %2 != 0)
-                    @include('front.index.partials.photoForFeaturedBlogPost',[
-                        'blogPost' => $blogPost
-                    ])
-                @endif
-                <div class="text col-lg-7">
-                    <div class="text-inner d-flex align-items-center">
-                        <div class="content">
-                            <header class="post-header">
-                                <div class="category">
-                                    @include('front.index.partials.blogPostCategoryName',[
-                                        'blogPost' => $blogPost
-                                    ])
-                                </div>
-                                <a href="blog-post.html">
-                                    <h2 class="h4">{{$blogPost->name}}</h2>
-                                </a>
-                            </header>
-                            <p>{{\Str::limit($blogPost->description,150)}}</p>
-                            <footer class="post-footer d-flex align-items-center">
-                                <a href="blog-author.html" class="author d-flex align-items-center flex-wrap">
-                                    <div class="avatar">
-                                        <img 
-                                            src="{{optional($blogPost->user)->getPhotoUrl()}}" 
-                                            alt="{{optional($blogPost->user)->name}}" class="img-fluid"
-                                        >
-                                    </div>
-                                    <div class="title">
-                                        <span>{{optional($blogPost->user)->name}}</span>
-                                    </div>
-                                </a>
-                                <div class="date">
-                                    <i class="icon-clock"></i>
-                                    {{\Carbon\Carbon::parse($blogPost->created_at)->diffForHumans()}}
-                                </div>
-                                <div class="comments"><i class="icon-comment"></i>12</div>
-                            </footer>
-                        </div>
-                    </div>
-                </div>
-                @if($loop->iteration %2 == 0)
-                    @include('front.index.partials.photoForFeaturedBlogPost',[
-                        'blogPost' => $blogPost
-                    ])
-                @endif
-            </div>
-            @endforeach
-        @endif
-    </div>
-</section>
+<!-- Featured Section-->
+@include('front.index.partials.featuredBlogPosts',[
+    'featuredBlogPosts' => $featuredBlogPosts
+])
 <!-- Divider Section-->
 <section style="background: url({{url('/themes/front/img/divider-bg.jpg')}}); background-size: cover; background-position: center bottom" class="divider">
     <div class="container">
@@ -100,47 +38,9 @@
     </div>
 </section>
 <!-- Latest Posts -->
-<section class="latest-posts"> 
-    <div class="container">
-        <header> 
-            <h2>@lang('Latest from the blog')</h2>
-            <p class="text-big">@lang('Lorem ipsum dolor sit amet, consectetur adipisicing elit.')</p>
-        </header>
-        @if($latestBlogPosts->count() > 0)
-        <div class="owl-carousel" id="latest-posts-slider">
-            <div class="row">
-            @foreach($latestBlogPosts as $blogPost)
-                <div class="post col-md-4">
-                    <div class="post-thumbnail">
-                        <a href="blog-post.html">
-                            <img src="{{$blogPost->getPhotoUrl()}}" alt="{{$blogPost->name}}" class="img-fluid">
-                        </a>
-                    </div>
-                    <div class="post-details">
-                        <div class="post-meta d-flex justify-content-between">
-                            <div class="date">{{\Carbon\Carbon::parse($blogPost->created_at)->format('F d, Y')}}</div>
-                            <div class="category">
-                                @include('front.index.partials.blogPostCategoryName',[
-                                    'blogPost' => $blogPost
-                                ])
-                            </div>
-                        </div>
-                        <a href="blog-post.html">
-                            <h3 class="h4">{{\Str::limit($blogPost->name,50)}}</h3>
-                        </a>
-                        <p class="text-muted">{{\Str::limit($blogPost->description,150)}}</p>
-                    </div>
-                </div>
-                @if($loop->iteration == 3 || $loop->iteration == 6 || $loop->iteration == 9)
-                </div>
-                <div class="row">
-                @endif
-            @endforeach
-            </div>
-        </div>  
-        @endif
-    </div>
-</section>
+@include('front.index.partials.latestBlogPosts',[
+    'latestBlogPosts' => $latestBlogPosts
+])
 <!-- Gallery Section-->
 <section class="gallery no-padding">    
     <div class="row">
@@ -180,3 +80,21 @@
     </div>
 </section>
 @endsection
+@push('footer_javascript')
+<script src="{{url('/themes/front/plugins/owl-carousel2/owl.carousel.min.js')}}"></script>
+<script>
+    $("#index-slider").owlCarousel({
+        "items": 1,
+        "loop": true,
+        "autoplay": true,
+        "autoplayHoverPause": true
+    });
+
+    $("#latest-posts-slider").owlCarousel({
+        "items": 1,
+        "loop": true,
+        "autoplay": true,
+        "autoplayHoverPause": true
+    });
+</script>
+@endpush

@@ -5,12 +5,7 @@
             <div class="close-btn"><i class="icon-close"></i></div>
             <div class="row d-flex justify-content-center">
                 <div class="col-md-8">
-                    <form action="blog-search.html">
-                        <div class="form-group">
-                            <input type="search" name="search" id="search" placeholder="What are you looking for?">
-                            <button type="submit" class="submit"><i class="icon-search-1"></i></button>
-                        </div>
-                    </form>
+                    @include('front._layout.partials.search_form')
                 </div>
             </div>
         </div>
@@ -25,11 +20,23 @@
         <!-- Navbar Menu -->
         <div id="navbarcollapse" class="collapse navbar-collapse">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a href="{{route('front.index.index')}}" class="nav-link active">@lang('Home')</a>
+                <li class="nav-item">
+                    <a 
+                        href="{{route('front.index.index')}}" 
+                        class="nav-link @if(url()->current() == route('front.index.index')) active @endif"
+                    >@lang('Home')</a>
                 </li>
-                <li class="nav-item"><a href="blog.html" class="nav-link">@lang('Blog')</a>
+                <li class="nav-item">
+                    <a 
+                        href="{{route('front.blog_posts.index')}}" 
+                        class="nav-link @if(url()->current() == route('front.blog_posts.index')) active @endif"
+                    >@lang('Blog')</a>
                 </li>
-                <li class="nav-item"><a href="contact.html" class="nav-link">@lang('Contact')</a>
+                <li class="nav-item">
+                    <a 
+                        href="{{route('front.contact.index')}}" 
+                        class="nav-link @if(url()->current() == route('front.contact.index')) active @endif"
+                    >@lang('Contact')</a>
                 </li>
             </ul>
             <div class="navbar-text"><a href="#" class="search-btn"><i class="icon-search-1"></i></a></div>

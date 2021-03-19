@@ -28,6 +28,9 @@ class SlidersController extends Controller
                         ->editColumn('id', function($slider) {
                             return view('admin.sliders.partials.sortable_id', ['slider' => $slider]);
                         })
+                        ->editColumn('photo', function($slider) {
+                            return view('admin.sliders.partials.photo', ['slider' => $slider]);
+                        })
                         ->editColumn('name', function($slider) {
                             return '<strong>' . e($slider->name) . '</strong>';
                         })
@@ -74,7 +77,12 @@ class SlidersController extends Controller
         
         $formData = $request->validate($this->validationRules($slider));
         
-        $slider->fill($formData);        
+        $slider->fill($formData);
+
+        if($request->hasFile('photo')){  
+            $slider->deletePhotoFromStorage();
+            $slider->photo = $this->storageSliderPhoto($request, $slider);
+        }         
         
         $slider->save();
         
@@ -154,7 +162,7 @@ class SlidersController extends Controller
     protected function validationRules(Slider $slider) {
         $validationPhoto = $slider->exists?'nullable':'required';
         return [          
-            'name' => ['required', 'string','max:50','unique:sliders,name'],           
+            'name' => ['required', 'string','max:50'],           
             'button_url' => ['required', 'string','regex:/((http:|https:)\/\/)|(\/)/'],           
             'button_title' => ['required', 'string','max:30','unique:sliders,name'],           
             'photo' => [$validationPhoto , 'image','max:65000'],          

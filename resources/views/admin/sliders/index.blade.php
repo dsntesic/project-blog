@@ -56,6 +56,7 @@
                                 <tr>
                                     <th style="width: 10px">#</th>
                                     <th class="text-center">@lang('Priority')</th>
+                                    <th class="text-center">@lang('Photo')</th>
                                     <th style="width: 30%;">@lang('Name')</th>
                                     <th class="text-center">@lang('Created At')</th>
                                     <th class="text-center">@lang('Last Change')</th>
@@ -148,7 +149,8 @@ let entitiesDatatable = $('#entity-list').on('processing.dt', function () {
     "order": [[1, 'asc']],
     "columns": [
         {"name": "id", "data": "id"},
-        {"name": "priority", "data": "priority"},
+        {"name": "priority", "data": "priority"},       
+        {"name": "photo", "data": "photo","searchable": false,"orderable": false, "className": "text-center"}, 
         {"name": "name", "data": "name"},
         {"name": "created_at", "data": "created_at", "className": "text-center"},
         {"name": "updated_at", "data": "updated_at", "className": "text-center"},

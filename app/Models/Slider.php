@@ -51,7 +51,7 @@ class Slider extends Model {
     public function getActionUrl() {
         if ($this->exists) {
             return route('admin.sliders.update', [
-                'blogPost' => $this->id
+                'slider' => $this->id
             ]);
         }
         return route('admin.sliders.store');
