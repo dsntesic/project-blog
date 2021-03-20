@@ -9,7 +9,7 @@ class BlogPost extends Model {
 
     protected $table = 'blog_posts';
     
-    protected $fillable = ['name', 'description', 'content', 'category_id'];
+    protected $fillable = ['status','name', 'description', 'content', 'category_id','reviews','created_at','updated_at'];
 
     const STATUS_ENABLE = 1;
     
@@ -29,9 +29,12 @@ class BlogPost extends Model {
         self::IMPORTANT_NO,
     ];
 
-    public function user() {
+    public function user() 
+    {
         return $this->belongsTo(
-                        User::class, 'user_id', 'id');
+                        User::class, 
+                        'user_id',
+                        'id');
     }
 
     /**
@@ -97,6 +100,17 @@ class BlogPost extends Model {
             ]);
         }
         return route('admin.blog_posts.store');
+    }
+    
+    /**
+     * A function that returns a url for a single blog post 
+     * @return string
+     */
+    public function getSingleBlogPost() {
+        return route('front.blog_posts.single',[
+            'blogPost' => $this->id,
+            'blogPostSlugName' => \Str::slug($this->name),
+        ]);
     }
     
     /**
@@ -216,6 +230,19 @@ class BlogPost extends Model {
         
         return $query->where('status', self::STATUS_ENABLE)
                      ->latest();
+    }
+    
+    /**
+     * Scope a query to only include blog post with max reviews for a month.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSortByMaxReviewsForOneMonth($query) {
+        
+        return $query->where('status', self::STATUS_ENABLE)
+                     ->whereBetween('updated_at', [now()->subMonth(), now()])
+                     ->orderBy('reviews','DESC');
     }
     
     /**

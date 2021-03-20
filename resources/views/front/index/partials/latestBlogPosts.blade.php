@@ -10,7 +10,7 @@
                 @foreach($latestBlogPosts as $blogPost)
                 <div class="post col-md-4">
                     <div class="post-thumbnail">
-                        <a href="blog-post.html">
+                        <a href="{{$blogPost->getSingleBlogPost()}}">
                             <img src="{{$blogPost->getPhotoUrl()}}" alt="{{$blogPost->name}}" class="img-fluid">
                         </a>
                     </div>
@@ -23,7 +23,7 @@
                                 ])
                             </div>
                         </div>
-                        <a href="blog-post.html">
+                        <a href="{{$blogPost->getSingleBlogPost()}}">
                             <h3 class="h4">{{$blogPost->getStrName()}}</h3>
                         </a>
                         <p class="text-muted">{{$blogPost->getStrDescription()}}</p>

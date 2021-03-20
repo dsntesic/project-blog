@@ -29,7 +29,13 @@
                 <li class="nav-item">
                     <a 
                         href="{{route('front.blog_posts.index')}}" 
-                        class="nav-link @if(url()->current() == route('front.blog_posts.index')) active @endif"
+                        class="nav-link 
+                            @if(
+                            \Route::currentRouteName() == 'front.blog_posts.index' ||
+                            \Route::currentRouteName() == 'front.blog_posts.search' ||
+                            \Route::currentRouteName() == 'front.blog_posts.single'
+                            )
+                            ) active @endif"
                     >@lang('Blog')</a>
                 </li>
                 <li class="nav-item">

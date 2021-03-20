@@ -42,7 +42,7 @@
                 <div class="latest-posts">
                     @foreach($latestBlogPosts as $blogPost)
                         @break($loop->iteration == 4)
-                        <a href="blog-post.html">
+                        <a href="{{$blogPost->getSingleBlogPost()}}">
                             <div class="post d-flex align-items-center">
                                 <div class="image">
                                     <img src="{{$blogPost->getPhotoThumbUrl()}}" alt="{{$blogPost->name}}" class="img-fluid">

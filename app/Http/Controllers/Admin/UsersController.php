@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Validation\Rule;
+use App\Models\BlogPost;
 use App\User;
 
 class UsersController extends Controller {
@@ -117,6 +118,9 @@ class UsersController extends Controller {
         $user = User::findOrFail($formData['id']);
         $user->status = User::STATUS_ACTIVE;
         $user->save();
+        $user->blogPosts()->update([
+            'status' => BlogPost::STATUS_ENABLE
+        ]);
         return response()->json([
                     'system_message' => __('User has been activated')
         ]);
@@ -130,6 +134,9 @@ class UsersController extends Controller {
         $user = User::findOrFail($formData['id']);
         $user->status = User::STATUS_BAN;
         $user->save();
+        $user->blogPosts()->update([
+            'status' => BlogPost::STATUS_DISABLE
+        ]);
         return response()->json([
                     'system_message' => __('User has been banned')
         ]);

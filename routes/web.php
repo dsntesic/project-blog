@@ -111,6 +111,12 @@ Route::name('front.')->group(function(){
     Route::prefix('/blog-posts')->name('blog_posts.')->group(function(){
         Route::get('/','BlogPostsController@index')->name('index');
         Route::get('/search','BlogPostsController@search')->name('search');
+        Route::get('/single/{blogPost}/{blogPostSlugName}','BlogPostsController@single')->name('single');
+    }); 
+    
+    //Routes for CategoryController
+    Route::prefix('/categories')->name('categories.')->group(function(){
+        Route::get('/single/{category}/{categorySlugName}','CategoriesController@single')->name('single');
     });  
 });
 

@@ -1,6 +1,6 @@
 <div class="btn-group">   
     <a 
-        href="" 
+        href="{{$blogPost->getSingleBlogPost()}}" 
         class="btn btn-info"
         target="_blank"              
         title='Show Blog Post'

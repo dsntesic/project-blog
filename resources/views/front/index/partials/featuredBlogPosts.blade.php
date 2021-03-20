@@ -19,7 +19,7 @@
                                 'blogPost' => $blogPost
                                 ])
                             </div>
-                            <a href="blog-post.html">
+                            <a href="{{$blogPost->getSingleBlogPost()}}">
                                 <h2 class="h4">{{$blogPost->getStrName()}}</h2>
                             </a>
                         </header>

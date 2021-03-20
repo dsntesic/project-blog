@@ -4,7 +4,7 @@
     @foreach($blogPostsMain as $blogPost)
     <div class="post col-xl-6">
         <div class="post-thumbnail">
-            <a href="blog-post.html">
+            <a href="{{$blogPost->getSingleBlogPost()}}">
                 <img src="{{$blogPost->getPhotoUrl()}}" alt="{{$blogPost->name}}" class="img-fluid">
             </a>
         </div>
@@ -17,7 +17,7 @@
                     ])
                 </div>
             </div>
-            <a href="blog-post.html">
+            <a href="{{$blogPost->getSingleBlogPost()}}">
                 <h3 class="h4" style="height:50px">{{$blogPost->getStrName()}}</h3>
             </a>
             <p class="text-muted" style="height:100px">{{$blogPost->getStrDescription()}}</p>
@@ -37,4 +37,6 @@
     </div>
     @endforeach
 </div>
+@else
+<p class="text-muted">@lang('There is no blog post')</p>
 @endif

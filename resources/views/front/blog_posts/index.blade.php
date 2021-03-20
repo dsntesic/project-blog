@@ -11,11 +11,11 @@
         <!-- Latest Posts -->
         <main class="posts-listing col-lg-8"> 
             <div class="container">
-                @include('front.blog_posts.partials.latest_blog_posts_main',[
+                @include('front._layout.partials.latest_blog_posts_main',[
                     'blogPostsMain' =>$latestBlogPostsMain
                 ])
                 <!-- Pagination -->
-                {{ $latestBlogPostsMain->links('front.blog_posts.partials.pagination') }}
+                {{ $latestBlogPostsMain->links('front._layout.partials.pagination') }}
             </div>
         </main>
         <aside class="col-lg-4">
@@ -28,14 +28,14 @@
             </div>
             <!-- Widget [Latest Posts Widget] -->
             @include('front._layout.partials.latest_widget_blog_posts',[
-                'latestBlogPosts' =>$latestBlogPosts
+                'latestBlogPostsWithMaxReviews' => $latestBlogPostsWithMaxReviews
             ])
             <!-- Widget [Categories Widget]-->
-            @include('front.blog_posts.partials.categories_widget',[
+            @include('front._layout.partials.categories_widget',[
                 'frontCategories' =>$frontCategories
             ])
             <!-- Widget [Tags Cloud Widget]-->
-            @include('front.blog_posts.partials.tags_widget',[
+            @include('front._layout.partials.tags_widget',[
                 'frontTags' =>$frontTags
             ])
         </aside>

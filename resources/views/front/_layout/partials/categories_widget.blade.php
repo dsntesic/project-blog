@@ -5,7 +5,7 @@
     @if($frontCategories->count() > 0)
         @foreach($frontCategories as $category)
             <div class="item d-flex justify-content-between">
-                <a href="">{{$category->name}}</a>
+                <a href="{{$category->getSingleCategory()}}">{{$category->name}}</a>
                 <span>{{$category->blog_posts_count}}</span>
             </div>
         @endforeach

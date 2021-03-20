@@ -36,7 +36,18 @@ class Category extends Model
     }
     
     /**
-     * 
+     * A function that returns a url for a single blog post 
+     * @return string
+     */
+    public function getSingleCategory() {
+        return route('front.categories.single',[
+            'category' => $this->id,
+            'categorySlugName' => \Str::slug($this->name),
+        ]);
+    }
+    
+    /**
+     *A function that sets the category by priority
      * @return int
      */
     public static function getPriorityForCategory() 

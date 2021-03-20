@@ -27,7 +27,7 @@
             @include('front.contact.partials.contact_widget')
             <!-- Widget [Latest Post Widget]-->
             @include('front._layout.partials.latest_widget_blog_posts',[
-                'latestBlogPosts' => $latestBlogPosts
+                'latestBlogPostsWithMaxReviews' => $latestBlogPostsWithMaxReviews
             ])
         </aside>
     </div>

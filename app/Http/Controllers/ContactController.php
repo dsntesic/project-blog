@@ -13,6 +13,10 @@ class ContactController extends Controller
 {
     public function index() 
     {
+        $latestBlogPostsWithMaxReviews = BlogPost::query()
+                                        ->sortByMaxReviewsForOneMonth()
+                                        ->limit(3)
+                                        ->get();
         $latestBlogPosts = BlogPost::query()
                            ->with(['category'])
                            ->latestBlogPostWithStatusEnable()
@@ -22,6 +26,7 @@ class ContactController extends Controller
                     ->orderBy('priority','ASC')
                     ->get();
         return view('front.contact.index',[
+            'latestBlogPostsWithMaxReviews' => $latestBlogPostsWithMaxReviews,
             'latestBlogPosts' => $latestBlogPosts,
             'frontCategories' => $frontCategories,
         ]);

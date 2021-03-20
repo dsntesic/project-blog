@@ -1,22 +1,22 @@
 @extends('front._layout.layout')
 
-@section('seo_title',__('All blog posts on our website with key word' . $searchFormTerm['search']))
+@section('seo_title',$category->name)
 @section('seo_og_type','article')
-@section('seo_description',__('Serious topics for blog posts, interesting topics, get involved'))
+@section('seo_description',$category->description)
 
 @section('content')
 
 <div class="container">
     <div class="row">
         <!-- Latest Posts -->
-        <main class="posts-listing col-lg-8">     
-            <div class="container"> 
-                <h2 class="mb-3">@lang('Search results for') {{$searchFormTerm['search']}}</h2>
+        <main class="posts-listing col-lg-8">
+            <h2 class="mb-3">@lang('Category') "{{$category->name}}"</h2>
+            <div class="container">
                 @include('front._layout.partials.latest_blog_posts_main',[
-                'blogPostsMain' =>$blogPostsMainSearch
+                    'blogPostsMain' =>$categoryBlogPosts
                 ])
                 <!-- Pagination -->
-                {{ $blogPostsMainSearch->appends($searchFormTerm)->links('front._layout.partials.pagination') }}
+                {{ $categoryBlogPosts->links('front._layout.partials.pagination') }}
             </div>
         </main>
         <aside class="col-lg-4">
@@ -29,15 +29,15 @@
             </div>
             <!-- Widget [Latest Posts Widget] -->
             @include('front._layout.partials.latest_widget_blog_posts',[
-            'latestBlogPostsWithMaxReviews' => $latestBlogPostsWithMaxReviews
+                'latestBlogPostsWithMaxReviews' => $latestBlogPostsWithMaxReviews
             ])
             <!-- Widget [Categories Widget]-->
             @include('front._layout.partials.categories_widget',[
-            'frontCategories' =>$frontCategories
+                'frontCategories' =>$frontCategories
             ])
             <!-- Widget [Tags Cloud Widget]-->
             @include('front._layout.partials.tags_widget',[
-            'frontTags' =>$frontTags
+                'frontTags' =>$frontTags
             ])
         </aside>
     </div>
