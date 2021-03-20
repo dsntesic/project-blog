@@ -4,26 +4,28 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Category;
 use App\Models\Tag;
+use App\Models\Category;
 use App\Models\BlogPost;
 use App\User;
 
-class CategoriesController extends Controller
+class TagsController extends Controller
 {
     
-    public function single(Category $category) 
+    public function single(Tag $tag) 
     {
-        $categoryBlogPosts = BlogPost::query()
+        $tagBlogPosts = BlogPost::query()
             ->with(
                 [
-                    'category',
-                    'user' => function ($query) {
+                 'category',
+                 'user' => function ($query) {
                     return $query->where('users.status', User::STATUS_ACTIVE);
                 }] 
             )
-            ->where('category_id',$category->id)
             ->latestBlogPostWithStatusEnable()
+            ->whereHas('tags',function($query) use ($tag){
+                return $query->where('blog_post_tags.tag_id',$tag->id); 
+            })
             ->paginate(12);
         $latestBlogPostsWithMaxReviews = BlogPost::query()
                                         ->with(['category'])
@@ -48,9 +50,9 @@ class CategoriesController extends Controller
                       }])
                       ->orderBy('blog_posts_count','desc')
                       ->get();
-        return view('front.categories.single',[
-            'category' => $category,
-            'categoryBlogPosts' => $categoryBlogPosts,
+        return view('front.tags.single',[
+            'tag' => $tag,
+            'tagBlogPosts' => $tagBlogPosts,
             'latestBlogPostsWithMaxReviews' => $latestBlogPostsWithMaxReviews,
             'latestBlogPosts' => $latestBlogPosts,
             'frontCategories' => $frontCategories,

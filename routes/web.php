@@ -117,6 +117,16 @@ Route::name('front.')->group(function(){
     //Routes for CategoryController
     Route::prefix('/categories')->name('categories.')->group(function(){
         Route::get('/single/{category}/{categorySlugName}','CategoriesController@single')->name('single');
+    });
+    
+    //Routes for TagsController
+    Route::prefix('/tags')->name('tags.')->group(function(){
+        Route::get('/single/{tag}/{tagSlugName}','TagsController@single')->name('single');
+    });
+    
+    //Routes for UsersController
+    Route::prefix('/users')->name('users.')->group(function(){
+        Route::get('/single/{user}/{userSlugName}','UsersController@single')->name('single');
     });  
 });
 

@@ -22,7 +22,7 @@
             </a>
             <p class="text-muted" style="height:100px">{{$blogPost->getStrDescription()}}</p>
             <footer class="post-footer d-flex align-items-center">
-                <a href="blog-author.html" class="author d-flex align-items-center flex-wrap">
+                <a href="{{optional($blogPost->user)->getSingleUser()}}" class="author d-flex align-items-center flex-wrap">
                     <div class="avatar">
                         <img src="{{optional($blogPost->user)->getPhotoUrl()}}" alt="{{optional($blogPost->user)->name}}" class="img-fluid">
                     </div>

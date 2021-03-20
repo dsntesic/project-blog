@@ -6,7 +6,7 @@
         <ul class="list-inline">
         @foreach($frontTags as $tag)
             <li class="list-inline-item">
-                <a href="blog-tag.html" class="tag">#{{$tag->name}}</a>
+                <a href="{{$tag->getSingleTag()}}" class="tag">#{{$tag->name}}</a>
             </li>
         @endforeach
         </ul>

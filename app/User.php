@@ -98,6 +98,17 @@ class User extends Authenticatable
         return route('admin.users.store');  
     }
     
+    /**
+     * A function that returns a url for a single user
+     * @return string
+     */
+    public function getSingleUser() {
+        return route('front.users.single',[
+            'user' => $this->id,
+            'userSlugName' => \Str::slug($this->name),
+        ]);
+    }
+    
     
     public function deletePhotoFromStorage() 
     {

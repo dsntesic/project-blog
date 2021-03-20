@@ -36,7 +36,7 @@ class Category extends Model
     }
     
     /**
-     * A function that returns a url for a single blog post 
+     * A function that returns a url for a single category
      * @return string
      */
     public function getSingleCategory() {

@@ -35,4 +35,15 @@ class Tag extends Model
         }
         return route('admin.tags.store');  
     }
+    
+    /**
+     * A function that returns a url for a single tag
+     * @return string
+     */
+    public function getSingleTag() {
+        return route('front.tags.single',[
+            'tag' => $this->id,
+            'tagSlugName' => \Str::slug($this->name),
+        ]);
+    }
 }
