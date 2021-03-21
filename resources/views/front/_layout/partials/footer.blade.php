@@ -31,7 +31,7 @@
                     <ul class="list-unstyled">
                         @foreach($frontCategories as $category)
                             @break($loop->iteration == 5)
-                            <li> <a href="">{{$category->name}}</a></li>
+                            <li> <a href="{{$category->getSingleCategory()}}">{{$category->name}}</a></li>
                         @endforeach
                     </ul>
                     @endif

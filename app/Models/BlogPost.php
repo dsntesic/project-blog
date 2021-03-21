@@ -36,6 +36,14 @@ class BlogPost extends Model {
                         'user_id',
                         'id');
     }
+    
+    public function comments() 
+    {
+        return $this->hasMany(
+                Comment::class,
+                'blog_post_id',
+                'id');
+    }
 
     /**
      * Get the category that owns the blog post.
@@ -68,9 +76,9 @@ class BlogPost extends Model {
     public function getPhotoThumbUrl() {
         if ($this->photo) {
             if(is_file(public_path('/storage/blog_posts/thumbs/' . $this->photo))){
-                return '/storage/blog_posts/thumbs/' . $this->photo;
+                return url('/storage/blog_posts/thumbs/' . $this->photo);
             }
-            return $this->photo;
+            return url($this->photo);
         }
         return url('https://via.placeholder.com/256');
     }
@@ -82,9 +90,9 @@ class BlogPost extends Model {
     public function getPhotoUrl() {
         if ($this->photo) {
             if(is_file(public_path('/storage/blog_posts/' . $this->photo))){
-                return '/storage/blog_posts/' . $this->photo;
+                return url('/storage/blog_posts/' . $this->photo);
             }
-            return $this->photo;
+            return url($this->photo);
         }
         return url('https://via.placeholder.com/640');
     }
@@ -141,6 +149,15 @@ class BlogPost extends Model {
     }
     
     /**
+     * The function returns the number of comments for a given blog post
+     * @return string
+     */
+    public function getCountComments() {
+        
+        return $this->comments->count();
+    }
+    
+    /**
      * A function that returns a limited name
      * @return string
      */
@@ -157,7 +174,6 @@ class BlogPost extends Model {
         return \Str::limit($this->description,150);
     }
     
-
     /**
      * The function checks if the blog post is enable
      * @return boolean
@@ -258,6 +274,17 @@ class BlogPost extends Model {
                               ->orWhere('description','LIKE','%' . $search . '%')
                               ->orWhere('content','LIKE','%' . $search . '%');
                      });
+    }
+    
+    /**
+     * Scope a query to only include blog post who is active.
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder 
+     */
+    public function scopeIsEnable($query) 
+    {
+        
+        return $query->where('status', self::STATUS_ENABLE);
     }
 
 }

@@ -92,6 +92,14 @@ Route::middleware('auth')->prefix('/admin')->namespace('Admin')->name('admin.')-
         Route::post('/delete','SlidersController@delete')->name('delete');
     });
     
+    //Routes for CommentsController
+    Route::prefix('/comments')->name('comments.')->group(function(){
+        Route::get('/','CommentsController@index')->name('index');
+        Route::post('/datatable','CommentsController@datatable')->name('datatable');
+        Route::post('/enable','CommentsController@enable')->name('enable');
+        Route::post('/disable','CommentsController@disable')->name('disable');
+    });
+    
 });
 
 //Front routes
@@ -112,6 +120,7 @@ Route::name('front.')->group(function(){
         Route::get('/','BlogPostsController@index')->name('index');
         Route::get('/search','BlogPostsController@search')->name('search');
         Route::get('/single/{blogPost}/{blogPostSlugName}','BlogPostsController@single')->name('single');
+        Route::get('/comments/{blogPost}','BlogPostsController@comments')->name('comments');
     }); 
     
     //Routes for CategoryController
@@ -127,7 +136,12 @@ Route::name('front.')->group(function(){
     //Routes for UsersController
     Route::prefix('/users')->name('users.')->group(function(){
         Route::get('/single/{user}/{userSlugName}','UsersController@single')->name('single');
-    });  
+    }); 
+    
+    //Routes for CommentsController
+    Route::prefix('/comments')->name('comments.')->group(function(){
+        Route::post('/store','CommentsController@store')->name('store');
+    }); 
 });
 
 Auth::routes();

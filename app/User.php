@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\BlogPost;
+use App\Models\Comment;
 
 class User extends Authenticatable
 {
@@ -54,6 +55,7 @@ class User extends Authenticatable
                 'user_id',
                 'id');
     }
+    
     /**
      *The function returns the url to the photo 
      * @return string
@@ -61,7 +63,7 @@ class User extends Authenticatable
     public function getPhotoUrl() 
     {
         if ($this->photo && is_file(public_path('/storage/users/' . $this->photo))) {
-            return '/storage/users/' . $this->photo;            
+            return url('/storage/users/' . $this->photo);            
         }
         return 'https://via.placeholder.com/200';
     }
@@ -139,6 +141,17 @@ class User extends Authenticatable
             $query->where('phone','LIKE', '%' . $searchTerm['phone'] . '%');
         }
         return $query;
+    }
+    
+    /**
+     * Scope a query to only include users who is active.
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder 
+     */
+    public function scopeIsActive($query) 
+    {
+        
+        return $query->where('status', self::STATUS_ACTIVE);
     }
     
 }

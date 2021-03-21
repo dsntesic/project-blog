@@ -2,7 +2,6 @@
 
 @section('seo_title',$user->name)
 @section('seo_og_type','article')
-@section('seo_description',$user->description)
 @section('seo_image',$user->getPhotoUrl())
 
 @section('content')

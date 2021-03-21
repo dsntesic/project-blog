@@ -166,7 +166,7 @@ class BlogPostsController extends Controller
         $blogPost->save();
         
         return response()->json([
-            'system_message' => __('Blog Post photo has been enabled')          
+            'system_message' => __('Blog Post has been enabled')          
         ]);
     }
     
@@ -181,7 +181,7 @@ class BlogPostsController extends Controller
         $blogPost->save();
         
         return response()->json([
-            'system_message' => __('Blog Post photo has been disabled')          
+            'system_message' => __('Blog Post has been disabled')          
         ]);
     }
     
@@ -231,7 +231,7 @@ class BlogPostsController extends Controller
         $blogPost->tags()->sync([]);
         
         return response()->json([
-            'system_message' => __('Blog Post photo has been deleted')          
+            'system_message' => __('Blog Post has been deleted')          
         ]);
     }
     

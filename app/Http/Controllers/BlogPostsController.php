@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Category;
-use App\Models\Tag;
+use Illuminate\Support\Facades\Cache;
 use App\Models\BlogPost;
+use App\Models\Comment;
 
 class BlogPostsController extends Controller
 {
@@ -14,35 +14,19 @@ class BlogPostsController extends Controller
     {
 
         $latestBlogPostsMain = BlogPost::query()
-                                ->with(['category','user'])
+                                ->with([
+                                    'category',
+                                    'user',
+                                    'comments' =>function($query){
+                                        return $query->where('status',Comment::STATUS_ENABLE);
+                                    }
+                                ])
                                 ->latestBlogPostWithStatusEnable()
                                 ->paginate(12);
-        $latestBlogPostsWithMaxReviews = BlogPost::query()
-                                        ->sortByMaxReviewsForOneMonth()
-                                        ->limit(3)
-                                        ->get();
         
-        $latestBlogPosts = BlogPost::query()
-                            ->with(['category'])
-                            ->latestBlogPostWithStatusEnable()
-                            ->limit(12)
-                            ->get();
         
-        $frontCategories = Category::query()
-                      ->withCount(['blogPosts'])
-                      ->orderBy('priority','ASC')
-                      ->get();
-        
-        $frontTags = Tag::query()
-                      ->withCount('blogPosts')
-                      ->orderBy('blog_posts_count','desc')
-                      ->get();
         return view('front.blog_posts.index',[
             'latestBlogPostsMain' => $latestBlogPostsMain,
-            'latestBlogPostsWithMaxReviews' => $latestBlogPostsWithMaxReviews,
-            'latestBlogPosts' => $latestBlogPosts,
-            'frontCategories' => $frontCategories,
-            'frontTags' => $frontTags,
         ]);
     }
     
@@ -53,50 +37,47 @@ class BlogPostsController extends Controller
         ]);
 
         $blogPostsMainSearch = BlogPost::query()
-                                ->with(['category','user'])
+                                ->with([
+                                    'category',
+                                    'user' => function($query){
+                                        return $query->isActive();
+                                    },
+                                    'comments'=>function($query){
+                                        return $query->isEnable();
+                                    }
+                                ])
                                 ->latestBlogPostWithStatusEnable()
                                 ->frontSearchBlogPost($searchFormTerm['search'])
                                 ->paginate(12);
-        $latestBlogPostsWithMaxReviews = BlogPost::query()
-                                        ->sortByMaxReviewsForOneMonth()
-                                        ->limit(3)
-                                        ->get();
-        $latestBlogPosts = BlogPost::query()
-                            ->with(['category'])
-                            ->latestBlogPostWithStatusEnable()
-                            ->limit(12)
-                            ->get();
-        
-        $frontCategories = Category::query()
-                      ->withCount(['blogPosts'])
-                      ->orderBy('priority','ASC')
-                      ->get();
-        
-        $frontTags = Tag::query()
-                      ->withCount('blogPosts')
-                      ->orderBy('blog_posts_count','desc')
-                      ->get();
         return view('front.blog_posts.search',[
             'searchFormTerm' => $searchFormTerm,
             'blogPostsMainSearch' => $blogPostsMainSearch,
-            'latestBlogPostsWithMaxReviews' => $latestBlogPostsWithMaxReviews,
-            'latestBlogPosts' => $latestBlogPosts,
-            'frontCategories' => $frontCategories,
-            'frontTags' => $frontTags,
         ]);
     }
     
     public function single(BlogPost $blogPost) 
     {
-        if($blogPost->status == BlogPost::STATUS_DISABLE){
+        if($blogPost->isBlogPostDisable()){
             abort(404);
         }
-
+        
+        Cache::flush();       
+        
         $blogPost->update([
             'reviews' => $blogPost->reviews + 1,
             'updated_at' => now(),
         ]);
-        $blogPost->load(['category','user','tags']);
+        
+        $blogPost->load([
+            'category',
+            'user' => function($query){
+                        return $query->isActive();
+                    },
+            'tags',
+            'comments' => function($query){
+                return $query->where('status',Comment::STATUS_ENABLE);
+            }
+            ]);
         
         $nextBlogPost = BlogPost::where('id', '>', $blogPost->id)
                         ->first();
@@ -105,33 +86,29 @@ class BlogPostsController extends Controller
                             ->orderBy('id','DESC')
                             ->first();
         
-        $latestBlogPostsWithMaxReviews = BlogPost::query()
-                                        ->with(['category'])
-                                        ->sortByMaxReviewsForOneMonth()
-                                        ->limit(3)
-                                        ->get();
-        $latestBlogPosts = BlogPost::query()
-                            ->latestBlogPostWithStatusEnable()
-                            ->limit(12)
-                            ->get();
-        
-        $frontCategories = Category::query()
-                      ->withCount(['blogPosts'])
-                      ->orderBy('priority','ASC')
-                      ->get();
-        
-        $frontTags = Tag::query()
-                      ->withCount('blogPosts')
-                      ->orderBy('blog_posts_count','desc')
-                      ->get();
         return view('front.blog_posts.single',[
             'blogPost' => $blogPost,
-            'latestBlogPostsWithMaxReviews' => $latestBlogPostsWithMaxReviews,
             'nextBlogPost' => $nextBlogPost,
             'previousBlogPost' => $previousBlogPost,
-            'latestBlogPosts' => $latestBlogPosts,
-            'frontCategories' => $frontCategories,
-            'frontTags' => $frontTags,
+        ]);
+    }
+    
+     public function comments(BlogPost $blogPost) 
+    {
+        Cache::flush();
+
+        $blogPost->load(
+                    [
+                        'comments' => function($query){
+                            $query->where('status', Comment::STATUS_ENABLE);
+                        }
+                    ]
+                );
+                    
+        $commentsBlogPost = $blogPost->comments; 
+        
+        return view('front.blog_posts.partials.comments',[
+            'commentsBlogPost' => $commentsBlogPost
         ]);
     }
        

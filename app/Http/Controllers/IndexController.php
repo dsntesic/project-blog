@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Category;
 use App\Models\BlogPost;
 use App\Models\Slider;
+use App\Models\Comment;
 
 class IndexController extends Controller
 {
@@ -18,24 +18,22 @@ class IndexController extends Controller
                          ->orderBy('priority','ASC')
                          ->get();
         $featuredBlogPosts = BlogPost::query()
-                           ->with(['category','user'])
+                           ->with([
+                               'category',
+                               'user' => function($query){
+                                    return $query->isActive();
+                                },
+                               'comments' => function($query){
+                                    return $query->isEnable();
+                               }
+                            ])
                            ->where('important', BlogPost::IMPORTANT_YES)
                            ->latestBlogPostWithStatusEnable()
                            ->limit(3)
                            ->get();
-        $latestBlogPosts = BlogPost::query()
-                           ->with(['category'])
-                           ->latestBlogPostWithStatusEnable()
-                           ->limit(12)
-                           ->get();
-        $frontCategories = Category::query()
-                            ->orderBy('priority','ASC')
-                            ->get();
         return view('front.index.index',[
             'latestSliders' => $latestSliders,
             'featuredBlogPosts' => $featuredBlogPosts,
-            'latestBlogPosts' => $latestBlogPosts,
-            'frontCategories' => $frontCategories,
         ]);
     }
 }

@@ -153,7 +153,7 @@
     $("#entities-filter-form [name='important']").select2({
         'theme': 'bootstrap4'
     });
-    $('#entities-filter-form').on('change keyup change',function(e){
+    $('#entities-filter-form').on('change keyup',function(e){
         e.preventDefault();
         $(this).trigger('submit');
     });

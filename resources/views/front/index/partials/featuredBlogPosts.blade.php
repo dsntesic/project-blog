@@ -25,7 +25,7 @@
                         </header>
                         <p>{{$blogPost->getStrDescription()}}</p>
                         <footer class="post-footer d-flex align-items-center">
-                            <a href="blog-author.html" class="author d-flex align-items-center flex-wrap">
+                            <a href="{{optional($blogPost->user)->getSingleUser()}}" class="author d-flex align-items-center flex-wrap">
                                 <div class="avatar">
                                     <img 
                                         src="{{optional($blogPost->user)->getPhotoUrl()}}" 
@@ -40,7 +40,7 @@
                                 <i class="icon-clock"></i>
                                 {{$blogPost->getFormatHumansDate()}}
                             </div>
-                            <div class="comments"><i class="icon-comment"></i>12</div>
+                            <div class="comments"><i class="icon-comment"></i>{{$blogPost->getCountComments()}}</div>
                         </footer>
                     </div>
                 </div>

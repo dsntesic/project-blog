@@ -31,7 +31,7 @@
                     </div>
                 </a>
                 <div class="date"><i class="icon-clock"></i> {{$blogPost->getFormatHumansDate()}}</div>
-                <div class="comments meta-last"><i class="icon-comment"></i>12</div>
+                <div class="comments meta-last"><i class="icon-comment"></i>{{$blogPost->getCountComments()}}</div>
             </footer>
         </div>
     </div>

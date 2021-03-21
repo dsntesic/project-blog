@@ -32,7 +32,7 @@
         <div class="row">
             <div class="col-md-7">
                 <h2>@lang('Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua')</h2>
-                <a href="contact.html" class="hero-link">@lang('Contact Us')</a>
+                <a href="{{route('front.contact.index')}}" class="hero-link">@lang('Contact Us')</a>
             </div>
         </div>
     </div>

@@ -33,8 +33,10 @@
                             @if(
                             \Route::currentRouteName() == 'front.blog_posts.index' ||
                             \Route::currentRouteName() == 'front.blog_posts.search' ||
-                            \Route::currentRouteName() == 'front.blog_posts.single'
-                            )
+                            \Route::currentRouteName() == 'front.blog_posts.single' ||
+                            \Route::currentRouteName() == 'front.categories.single' ||
+                            \Route::currentRouteName() == 'front.tags.single' ||
+                            \Route::currentRouteName() == 'front.users.single'
                             ) active @endif"
                     >@lang('Blog')</a>
                 </li>

@@ -26,9 +26,9 @@ class Slider extends Model {
     public function getPhotoUrl() {
         if ($this->photo) {
             if(is_file(public_path('/storage/sliders/' . $this->photo))){
-                return '/storage/sliders/' . $this->photo;
+                return url('/storage/sliders/' . $this->photo);
             }
-            return $this->photo;
+            return url($this->photo);
         }
         return url('https://via.placeholder.com/800');
     }
