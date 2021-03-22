@@ -20,7 +20,7 @@ class CreateBlogPostsTable extends Migration
             $table->text('description');
             $table->longText('content')->nullable();
             $table->bigInteger('user_id');
-            $table->bigInteger('category_id');
+            $table->bigInteger('category_id')->nullable();
             $table->tinyInteger('status')->comment('1 -  enablevoan ,0 - disableovan');
             $table->tinyInteger('important')->comment('1 - important,0 - no important');
             $table->bigInteger('reviews')->default(0);

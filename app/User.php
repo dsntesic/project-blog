@@ -6,7 +6,6 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\BlogPost;
-use App\Models\Comment;
 
 class User extends Authenticatable
 {
@@ -107,10 +106,18 @@ class User extends Authenticatable
     public function getSingleUser() {
         return route('front.users.single',[
             'user' => $this->id,
-            'userSlugName' => \Str::slug($this->name),
+            'userSlugName' => $this->getSlugUrl(),
         ]);
     }
     
+    /**
+     * A function that returns a slug
+     * @return string
+     */
+    public function getSlugUrl() {
+        
+        return \Str::slug($this->name);
+    }
     
     public function deletePhotoFromStorage() 
     {

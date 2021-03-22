@@ -43,7 +43,16 @@ class Tag extends Model
     public function getSingleTag() {
         return route('front.tags.single',[
             'tag' => $this->id,
-            'tagSlugName' => \Str::slug($this->name),
+            'tagSlugName' => $this->getSlugUrl(),
         ]);
+    }
+    
+    /**
+     * A function that returns a slug
+     * @return string
+     */
+    public function getSlugUrl() {
+        
+        return \Str::slug($this->name);
     }
 }

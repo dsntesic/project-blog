@@ -14,7 +14,7 @@ class CategoriesTableSeeder extends Seeder
     public function run()
     {
         DB::table('categories')->truncate();
-        for($i = 1;$i<=10;$i++){
+        for($i = 1;$i<=5;$i++){
             factory(Category::class)->create([
                 'priority' => $i
             ]);

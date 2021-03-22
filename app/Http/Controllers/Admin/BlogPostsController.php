@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
 use App\Models\BlogPost;
 use App\Models\Category;
 use App\Models\Tag;
@@ -38,7 +36,11 @@ class BlogPostsController extends Controller
     {
         $serachFormTerm = $request->validate($this->validationSearchFormRules());
         $query = BlogPost::query()
-                ->with(['category','user'])
+                ->with(['category','tags',
+                    'comments' =>function($query){
+                        return $query->isEnable();
+                    }
+                ])
                 ->join('users','blog_posts.user_id','=','users.id')
                 ->select('blog_posts.*','users.name as autor_name')
                 ->filterSearchTerm($serachFormTerm);
@@ -48,6 +50,9 @@ class BlogPostsController extends Controller
                         })
                         ->addColumn('category_name', function($blogPost) {
                             return optional($blogPost->category)->name??'Uncategorized';
+                        })
+                        ->editColumn('comments', function($blogPost) {
+                            return $blogPost->comments->count();
                         })
                         ->editColumn('photo', function($blogPost) {
                             return view('admin.blog_posts.partials.photo', ['blogPost' => $blogPost]);
@@ -61,7 +66,7 @@ class BlogPostsController extends Controller
                         ->editColumn('name', function($blogPost) {
                             return '<strong>' . e(\Str::limit($blogPost->name,20)) . '</strong>';
                         })
-                        ->rawColumns(['status','important','name','actions'])
+                        ->rawColumns(['status','important','name','comments','actions'])
                         ->filter(function ($query) use ($request){
                             if(
                                 $request->has('search') &&
@@ -73,7 +78,6 @@ class BlogPostsController extends Controller
 
                                         $query->orWhere('blog_posts.name', 'LIKE', '%' . $searchTerm . '%')
                                               ->orWhere('blog_posts.description', 'LIKE', '%' . $searchTerm . '%')
-                                              ->orWhere('categories.name', 'LIKE', '%' . $searchTerm . '%')
                                               ->orWhere('users.name', 'LIKE', '%' . $searchTerm . '%');
 				});
                             }
@@ -88,7 +92,7 @@ class BlogPostsController extends Controller
                     ->orderBy('priority','asc')
                     ->get();
         $tags = Tag::query()
-                    ->orderBy('created_at','desc')
+                    ->latest()
                     ->get();
         return view('admin.blog_posts.create', [
             'blogPost' => $blogPost,
@@ -125,7 +129,7 @@ class BlogPostsController extends Controller
                     ->orderBy('priority','asc')
                     ->get();
         $tags = Tag::query()
-                    ->orderBy('created_at','desc')
+                    ->latest()
                     ->get();
         return view('admin.blog_posts.edit', [
             'blogPost' => $blogPost,
@@ -243,7 +247,7 @@ class BlogPostsController extends Controller
             'name' => ['required', 'string', 'min:20', 'max:255'],
             'description' => ['required', 'string','min:50','max:500'],
             'content' => ['nullable', 'string'],
-            'category_id' => ['required', 'numeric','exists:categories,id'],
+            'category_id' => ['nullable', 'numeric','exists:categories,id'],
             'tag_id' => ['required', 'array','exists:tags,id'],
         ];
     }

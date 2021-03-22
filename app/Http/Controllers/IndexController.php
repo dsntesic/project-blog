@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\BlogPost;
 use App\Models\Slider;
-use App\Models\Comment;
 
 class IndexController extends Controller
 {

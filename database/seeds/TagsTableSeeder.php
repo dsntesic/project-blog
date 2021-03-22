@@ -13,6 +13,6 @@ class TagsTableSeeder extends Seeder
     public function run()
     {
         DB::table('tags')->truncate();
-        factory(Tag::class, 10)->create(); 
+        factory(Tag::class, 5)->create(); 
     }
 }

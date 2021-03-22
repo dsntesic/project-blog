@@ -6,13 +6,17 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\BlogPost;
-use App\Models\Comment;
 
 class CategoriesController extends Controller
 {
     
-    public function single(Category $category) 
+    public function single(Category $category,$slugUrl) 
     {
+        
+        if($slugUrl != $category->getSlugUrl()){
+            abort(404);
+        }
+        
         $categoryBlogPosts = BlogPost::query()
                             ->with([
                                 'category',

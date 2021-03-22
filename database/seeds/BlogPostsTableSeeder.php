@@ -16,19 +16,19 @@ class BlogPostsTableSeeder extends Seeder {
     public function run() {
         DB::table('blog_posts')->truncate();
         $faker = Faker::create();
-        $tagRandomIds = Tag::pluck('id')->random(rand(1,4));
-        $tagRandomIdsWithTimestamps = [];
-        foreach ($tagRandomIds as $id) {
-            
-            $tagRandomIdsWithTimestamps[$id] = 
-                [
-                    'created_at' => $faker->dateTimeBetween($startDate = '-6 month', $endDate = 'now', $timezone = config('app.timezone')),
-                    'updated_at' => $faker->dateTimeBetween($startDate = '-6 month', $endDate = 'now', $timezone = config('app.timezone'))
-                ];
-        }
-        factory(BlogPost::class, 20)
+        factory(BlogPost::class, 30)
             ->create()
-            ->each(function($blogPost) use($tagRandomIdsWithTimestamps){
+            ->each(function($blogPost) use($faker){
+                $tagRandomIds = Tag::pluck('id')->random(rand(1,4));
+                $tagRandomIdsWithTimestamps = [];
+                foreach ($tagRandomIds as $id) {
+
+                    $tagRandomIdsWithTimestamps[$id] = 
+                        [
+                            'created_at' => $faker->dateTimeBetween($startDate = '-6 month', $endDate = 'now', $timezone = config('app.timezone')),
+                            'updated_at' => $faker->dateTimeBetween($startDate = '-6 month', $endDate = 'now', $timezone = config('app.timezone'))
+                        ];
+                }
                 $blogPost->tags()->sync(
                     $tagRandomIdsWithTimestamps
                 );

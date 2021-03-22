@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Cache;
 use App\Models\Category;
 use App\Models\Tag;
 use App\Models\BlogPost;
-use App\Models\Comment;
 
 
 
@@ -22,7 +21,7 @@ class TestViewComposer {
                     return Category::query()
                             ->withCount([
                                   'blogPosts' =>function($query){
-                                      return $query->where('status', BlogPost::STATUS_ENABLE);
+                                      return $query->isEnable();
                                   }
                               ])
                             ->orderBy('priority','ASC')
@@ -35,9 +34,9 @@ class TestViewComposer {
                 function () {
                     return Tag::query()
                             ->withCount([
-                                  'blogPosts' =>function($query){
-                                      return $query->where('status', BlogPost::STATUS_ENABLE);
-                                  }
+                                'blogPosts' =>function($query){
+                                    return $query->isEnable();
+                                }
                             ])
                             ->orderBy('blog_posts_count','desc')
                             ->get();
@@ -53,7 +52,7 @@ class TestViewComposer {
                                 'user' => function($query){
                                     return $query->isActive();
                                 }
-                                ])
+                            ])
                             ->latestBlogPostWithStatusEnable()
                             ->limit(12)
                             ->get();

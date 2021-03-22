@@ -23,21 +23,21 @@ Route::middleware('auth')->prefix('/admin')->namespace('Admin')->name('admin.')-
         Route::get('/','UsersController@index')->name('index');
         Route::post('/datatable','UsersController@datatable')->name('datatable');
         Route::get('/create','UsersController@create')->name('create');
-        Route::post('/store','UsersController@store')->name('store');
+        Route::post('/store','UsersController@store')->name('store')->middleware('ereeseCache');
         Route::get('/edit/{user}','UsersController@edit')->name('edit');
-        Route::post('/update/{user}','UsersController@update')->name('update');
-        Route::post('/delete-photo','UsersController@deletePhoto')->name('delete_photo');
-        Route::post('/active','UsersController@active')->name('active');
-        Route::post('/ban','UsersController@ban')->name('ban');
+        Route::post('/update/{user}','UsersController@update')->name('update')->middleware('ereeseCache');
+        Route::post('/delete-photo','UsersController@deletePhoto')->name('delete_photo')->middleware('ereeseCache');
+        Route::post('/active','UsersController@active')->name('active')->middleware('ereeseCache');
+        Route::post('/ban','UsersController@ban')->name('ban')->middleware('ereeseCache');
     });
     
     //Routes for ProfileController
     Route::prefix('/profile')->name('profile.')->group(function(){
         Route::get('/edit','ProfileController@edit')->name('edit');
-        Route::post('/update','ProfileController@update')->name('update');
+        Route::post('/update','ProfileController@update')->name('update')->middleware('ereeseCache');
         Route::get('/show-change-password','ProfileController@showChangePassword')->name('show_change_password');
         Route::post('/change-password','ProfileController@changePassword')->name('change_password');
-        Route::post('/delete-photo','ProfileController@deletePhoto')->name('delete_photo');
+        Route::post('/delete-photo','ProfileController@deletePhoto')->name('delete_photo')->middleware('ereeseCache');
     });
     
     //Routes for TagsController
@@ -45,10 +45,8 @@ Route::middleware('auth')->prefix('/admin')->namespace('Admin')->name('admin.')-
         Route::get('/','TagsController@index')->name('index');
         Route::post('/datatable','TagsController@datatable')->name('datatable');
         Route::get('/create','TagsController@create')->name('create');
-        Route::post('/store','TagsController@store')->name('store');
-        Route::get('/edit/{tag}','TagsController@edit')->name('edit');
-        Route::post('/update/{tag}','TagsController@update')->name('update');
-        Route::post('/delete','TagsController@delete')->name('delete');
+        Route::post('/store','TagsController@store')->name('store')->middleware('ereeseCache');
+        Route::post('/delete','TagsController@delete')->name('delete')->middleware('ereeseCache');
     });
     
     //Routes for CategoriesController
@@ -56,11 +54,11 @@ Route::middleware('auth')->prefix('/admin')->namespace('Admin')->name('admin.')-
         Route::get('/','CategoriesController@index')->name('index');
         Route::post('/datatable','CategoriesController@datatable')->name('datatable');
         Route::get('/create','CategoriesController@create')->name('create');
-        Route::post('/store','CategoriesController@store')->name('store');
+        Route::post('/store','CategoriesController@store')->name('store')->middleware('ereeseCache');
         Route::get('/edit/{category}','CategoriesController@edit')->name('edit');
-        Route::post('/update/{category}','CategoriesController@update')->name('update');
-        Route::post('/change-priorities','CategoriesController@changePriorities')->name('change_priorities');
-        Route::post('/delete','CategoriesController@delete')->name('delete');
+        Route::post('/update/{category}','CategoriesController@update')->name('update')->middleware('ereeseCache');
+        Route::post('/change-priorities','CategoriesController@changePriorities')->name('change_priorities')->middleware('ereeseCache');
+        Route::post('/delete','CategoriesController@delete')->name('delete')->middleware('ereeseCache');
     });
     
     //Routes for BlogPostsController
@@ -68,14 +66,14 @@ Route::middleware('auth')->prefix('/admin')->namespace('Admin')->name('admin.')-
         Route::get('/','BlogPostsController@index')->name('index');
         Route::post('/datatable','BlogPostsController@datatable')->name('datatable');
         Route::get('/create','BlogPostsController@create')->name('create');
-        Route::post('/store','BlogPostsController@store')->name('store');
+        Route::post('/store','BlogPostsController@store')->name('store')->middleware('ereeseCache');
         Route::get('/edit/{blogPost}','BlogPostsController@edit')->name('edit');
-        Route::post('/update/{blogPost}','BlogPostsController@update')->name('update');
-        Route::post('/enable','BlogPostsController@enable')->name('enable');
-        Route::post('/disable','BlogPostsController@disable')->name('disable');
-        Route::post('/important','BlogPostsController@important')->name('important');
-        Route::post('/no-important','BlogPostsController@noImportant')->name('no_important');
-        Route::post('/delete','BlogPostsController@delete')->name('delete');
+        Route::post('/update/{blogPost}','BlogPostsController@update')->name('update')->middleware('ereeseCache');
+        Route::post('/enable','BlogPostsController@enable')->name('enable')->middleware('ereeseCache');
+        Route::post('/disable','BlogPostsController@disable')->name('disable')->middleware('ereeseCache');
+        Route::post('/important','BlogPostsController@important')->name('important')->middleware('ereeseCache');
+        Route::post('/no-important','BlogPostsController@noImportant')->name('no_important')->middleware('ereeseCache');
+        Route::post('/delete','BlogPostsController@delete')->name('delete')->middleware('ereeseCache');
     });
     
     //Routes for SlidersController
@@ -83,21 +81,21 @@ Route::middleware('auth')->prefix('/admin')->namespace('Admin')->name('admin.')-
         Route::get('/','SlidersController@index')->name('index');
         Route::post('/datatable','SlidersController@datatable')->name('datatable');
         Route::get('/create','SlidersController@create')->name('create');
-        Route::post('/store','SlidersController@store')->name('store');
+        Route::post('/store','SlidersController@store')->name('store')->middleware('ereeseCache');
         Route::get('/edit/{slider}','SlidersController@edit')->name('edit');
-        Route::post('/update/{slider}','SlidersController@update')->name('update');
-        Route::post('/enable','SlidersController@enable')->name('enable');
-        Route::post('/disable','SlidersController@disable')->name('disable');       
-        Route::post('/change-priorities','SlidersController@changePriorities')->name('change_priorities');
-        Route::post('/delete','SlidersController@delete')->name('delete');
+        Route::post('/update/{slider}','SlidersController@update')->name('update')->middleware('ereeseCache');
+        Route::post('/enable','SlidersController@enable')->name('enable')->middleware('ereeseCache');
+        Route::post('/disable','SlidersController@disable')->name('disable')->middleware('ereeseCache');       
+        Route::post('/change-priorities','SlidersController@changePriorities')->name('change_priorities')->middleware('ereeseCache');
+        Route::post('/delete','SlidersController@delete')->name('delete')->middleware('ereeseCache');
     });
     
     //Routes for CommentsController
     Route::prefix('/comments')->name('comments.')->group(function(){
         Route::get('/','CommentsController@index')->name('index');
         Route::post('/datatable','CommentsController@datatable')->name('datatable');
-        Route::post('/enable','CommentsController@enable')->name('enable');
-        Route::post('/disable','CommentsController@disable')->name('disable');
+        Route::post('/enable','CommentsController@enable')->name('enable')->middleware('ereeseCache');
+        Route::post('/disable','CommentsController@disable')->name('disable')->middleware('ereeseCache');
     });
     
 });
@@ -115,33 +113,36 @@ Route::name('front.')->group(function(){
         Route::post('/send-message','ContactController@sendMessage')->name('send_message');
     });
     
-    //Routes for BlogPostsController
-    Route::prefix('/blog-posts')->name('blog_posts.')->group(function(){
-        Route::get('/','BlogPostsController@index')->name('index');
-        Route::get('/search','BlogPostsController@search')->name('search');
-        Route::get('/single/{blogPost}/{blogPostSlugName}','BlogPostsController@single')->name('single');
-        Route::get('/comments/{blogPost}','BlogPostsController@comments')->name('comments');
-    }); 
-    
-    //Routes for CategoryController
-    Route::prefix('/categories')->name('categories.')->group(function(){
-        Route::get('/single/{category}/{categorySlugName}','CategoriesController@single')->name('single');
-    });
-    
-    //Routes for TagsController
-    Route::prefix('/tags')->name('tags.')->group(function(){
-        Route::get('/single/{tag}/{tagSlugName}','TagsController@single')->name('single');
-    });
-    
-    //Routes for UsersController
-    Route::prefix('/users')->name('users.')->group(function(){
-        Route::get('/single/{user}/{userSlugName}','UsersController@single')->name('single');
-    }); 
-    
-    //Routes for CommentsController
-    Route::prefix('/comments')->name('comments.')->group(function(){
-        Route::post('/store','CommentsController@store')->name('store');
-    }); 
+    Route::prefix('/blog')->group(function () {    
+
+        //Routes for BlogPostsController
+        Route::prefix('/posts')->name('blog_posts.')->group(function(){
+            Route::get('/','BlogPostsController@index')->name('index');
+            Route::get('/search','BlogPostsController@search')->name('search');
+            Route::get('/single/{blogPost}/{blogPostSlugName}','BlogPostsController@single')->name('single')->middleware('ereeseCache');
+            Route::get('/comments/{blogPost}','BlogPostsController@comments')->name('comments');
+        }); 
+
+        //Routes for CategoryController
+        Route::prefix('/categories')->name('categories.')->group(function(){
+            Route::get('/single/{category}/{categorySlugName}','CategoriesController@single')->name('single');
+        });
+
+        //Routes for TagsController
+        Route::prefix('/tags')->name('tags.')->group(function(){
+            Route::get('/single/{tag}/{tagSlugName}','TagsController@single')->name('single');
+        });
+
+        //Routes for UsersController
+        Route::prefix('/users')->name('users.')->group(function(){
+            Route::get('/single/{user}/{userSlugName}','UsersController@single')->name('single');
+        }); 
+
+        //Routes for CommentsController
+        Route::prefix('/comments')->name('comments.')->group(function(){
+            Route::post('/store','CommentsController@store')->name('store')->middleware('ereeseCache');
+        });
+    });     
 });
 
 Auth::routes();

@@ -15,7 +15,7 @@ $factory->define(BlogPost::class, function (Faker $faker) {
         'name' => $faker->realText(rand(20,255)),
         'description' => $faker->realText(rand(50,500)),
         'user_id' => $userRandomId,
-        'category_id' => $categoryRandomId,
+        'category_id' => (rand(0,1))?$categoryRandomId:null,
         'status' => rand(0,1),
         'important' => rand(0,1),
         'created_at' => $faker->dateTimeBetween($startDate = '-6 month', $endDate = 'now', $timezone = config('app.timezone')),

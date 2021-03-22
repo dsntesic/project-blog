@@ -117,8 +117,17 @@ class BlogPost extends Model {
     public function getSingleBlogPost() {
         return route('front.blog_posts.single',[
             'blogPost' => $this->id,
-            'blogPostSlugName' => \Str::slug($this->name),
+            'blogPostSlugName' => $this->getSlugUrl(),
         ]);
+    }
+    
+    /**
+     * A function that returns a slug
+     * @return string
+     */
+    public function getSlugUrl() {
+        
+        return \Str::slug($this->name);
     }
     
     /**
@@ -129,6 +138,7 @@ class BlogPost extends Model {
         
         return \Carbon\Carbon::parse($this->created_at)->diffForHumans();
     }
+    
     
     /**
      * A function that returns a date in  format type e.g  January 1 | 2004

@@ -4,21 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use App\Models\BlogPost;
 use App\Models\Comment;
 
 class BlogPostsController extends Controller
 {
-    public function index(Request $request) 
+    public function index() 
     {
 
         $latestBlogPostsMain = BlogPost::query()
                                 ->with([
                                     'category',
-                                    'user',
+                                    'user' => function($query){
+                                        return $query->isActive();
+                                    },
                                     'comments' =>function($query){
-                                        return $query->where('status',Comment::STATUS_ENABLE);
+                                        return $query->isEnable();
                                     }
                                 ])
                                 ->latestBlogPostWithStatusEnable()
@@ -55,13 +56,15 @@ class BlogPostsController extends Controller
         ]);
     }
     
-    public function single(BlogPost $blogPost) 
+    public function single(BlogPost $blogPost,$slugUrl) 
     {
         if($blogPost->isBlogPostDisable()){
             abort(404);
         }
         
-        Cache::flush();       
+        if($slugUrl != $blogPost->getSlugUrl()){
+            abort(404);
+        }      
         
         $blogPost->update([
             'reviews' => $blogPost->reviews + 1,
@@ -79,11 +82,14 @@ class BlogPostsController extends Controller
             }
             ]);
         
-        $nextBlogPost = BlogPost::where('id', '>', $blogPost->id)
+        $nextBlogPost = BlogPost::query()
+                        ->where('created_at', '>', $blogPost->created_at)
+                        ->where('status', BlogPost::STATUS_ENABLE)
                         ->first();
         
-        $previousBlogPost = BlogPost::where('id', '<', $blogPost->id)
-                            ->orderBy('id','DESC')
+        $previousBlogPost = BlogPost::query()
+                            ->where('created_at', '<', $blogPost->created_at)
+                            ->orderBy('created_at','DESC')
                             ->first();
         
         return view('front.blog_posts.single',[
@@ -95,12 +101,11 @@ class BlogPostsController extends Controller
     
      public function comments(BlogPost $blogPost) 
     {
-        Cache::flush();
 
         $blogPost->load(
                     [
                         'comments' => function($query){
-                            $query->where('status', Comment::STATUS_ENABLE);
+                            $query->isEnable();
                         }
                     ]
                 );

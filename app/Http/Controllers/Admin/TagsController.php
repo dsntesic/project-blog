@@ -55,38 +55,6 @@ class TagsController extends Controller
         return redirect()->route('admin.tags.index');
     }
     
-    public function edit(Tag $tag) 
-    {
-        return view('admin.tags.edit', [
-            'tag' => $tag
-        ]);
-    }
-    
-    public function update(Request $request,Tag $tag) 
-    {
-        
-        $formData = $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:50',
-                Rule::unique('tags')
-                ->ignore($tag->id)],
-        ]);
-        
-        $tag->fill($formData);        
-        
-        $tag->save();
-        
-        //session()->flash('system_message',__('Tag has been changed successfully!!'));
-        
-        return response()->json([
-            'system_message' => __('Tag has been changed successfully!!')          
-        ]);
-            
-        //return redirect()->route('admin.tags.index');
-    }
-
     public function delete(Request $request) 
     {
         $formData = $request->validate([
@@ -94,8 +62,7 @@ class TagsController extends Controller
         ]);
 
         $tag = Tag::findOrFail($formData['id']);
-        //potrebno je srediti brisanje post tagove
-        
+        $tag->blogPosts()->sync([]);
         $tag->delete();
         return response()->json([
             'system_message' => __('Tag photo has been deleted')          

@@ -45,7 +45,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'bojanic@gmail.com',
                 'password' => \Hash::make('admin'),
                 'name' => 'Bojana Bojanić',
-                'phone' => '+3816444444',
+                'phone' => '+38164444444',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),            
         ]); 

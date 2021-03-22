@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Tag;
 use App\Models\BlogPost;
-use App\Models\Comment;
 
 class TagsController extends Controller
 {
     
-    public function single(Tag $tag) 
+    public function single(Tag $tag,$slugUrl) 
     {
+        
+        if($slugUrl != $tag->getSlugUrl()){
+            abort(404);
+        }
+        
         $tagBlogPosts = BlogPost::query()
             ->with([
                 'category',

@@ -42,8 +42,17 @@ class Category extends Model
     public function getSingleCategory() {
         return route('front.categories.single',[
             'category' => $this->id,
-            'categorySlugName' => \Str::slug($this->name),
+            'categorySlugName' => $this->getSlugUrl(),
         ]);
+    }
+    
+    /**
+     * A function that returns a slug
+     * @return string
+     */
+    public function getSlugUrl() {
+        
+        return \Str::slug($this->name);
     }
     
     /**

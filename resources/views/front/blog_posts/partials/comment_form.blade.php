@@ -6,15 +6,15 @@
   </button>
 </div>
 @endif
-<form action="#" method='post' class="commenting-form" id='comment-form'>
+<form action="{{route('front.comments.store')}}" method='post' class="commenting-form" id='comment-form'>
     @csrf
-    <input type='hidden' name='blog_post_id' value='{{old('blog_post_id',$blogPost->id)}}'>
+    <input type='hidden' name='blog_post_id' value='{{$blogPost->id}}'>
     <div class="row">
         <div class="form-group col-md-6">
             <input 
                 type="text" 
                 name="name" 
-                value="{{old('name')}}"
+                value="@isset($request) {{$request->input('name')}} @endisset"
                 id="username" 
                 placeholder="@lang('Name')" 
                 class="form-control @if($errors->has('name')) is-invalid @endif"
@@ -25,9 +25,9 @@
         </div>
         <div class="form-group col-md-6">
             <input 
-                type="email" 
+                type="text" 
                 name="email"
-                value="{{old('email')}}"
+                value="@isset($request) {{$request->input('email')}} @endisset"
                 id="useremail" 
                 placeholder="@lang('Email Address (will not be published)')" 
                 class="form-control @if($errors->has('email')) is-invalid @endif"
@@ -42,7 +42,7 @@
                 id="usercomment" 
                 placeholder="@lang('Type your comment')" 
                 class="form-control @if($errors->has('message')) is-invalid @endif"
-            >{{old('comment')}}</textarea>
+            >@isset($request) {{$request->input('message')}} @endisset</textarea>
             @include('front._layout.partials.form_errors',[
                 'fieldName' => 'message'
             ])
@@ -52,23 +52,3 @@
         </div>
     </div>
 </form>
-@push('footer_javascript')
-<script type="text/javascript">
-    $('#comment-form').on('submit',function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        $.ajax({
-            
-            "url": "{{route('front.comments.store')}}",
-            "type": "post",
-            "data": $(this).serialize() 
-            
-        }).done(function(response){
-            $('#comment-form').html(response);
-            refreshCommentsBlogPost();
-        }).fail(function(xhr){
-            toastr.error("@lang('Something is wrong with creating comments')");
-        });
-    });
-</script>
-@endpush

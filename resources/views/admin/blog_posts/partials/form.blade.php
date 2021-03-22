@@ -146,6 +146,7 @@ $('#entity-form').validate({
             "rangelength": [20, 255]
         },
         "photo": {
+            "required": true
         },
         "description": {
             "required": true,
@@ -154,7 +155,6 @@ $('#entity-form').validate({
         "content": {
         },
         "category_id": {
-            "required": true
         },
         "tag_id[]": {
             "required": true

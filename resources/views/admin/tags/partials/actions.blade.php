@@ -1,12 +1,6 @@
 <div class="btn-group">   
-    <a href="" class="btn btn-info" target="_blank">
+    <a href="{{$tag->getSingleTag()}}" class="btn btn-info" target="_blank">
         <i class="fas fa-eye"></i>
-    </a>
-    <a 
-        href="{{route('admin.tags.edit',['tag' => $tag->id])}}" 
-        class="btn btn-info"
-        >
-        <i class="fas fa-edit"></i>
     </a>
     <button 
         type="button" 

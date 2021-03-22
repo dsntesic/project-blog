@@ -17,7 +17,7 @@
                     <div class="post-thumbnail">
                         <img src="{{$blogPost->getPhotoUrl()}}" alt="{{$blogPost->name}}" class="img-fluid">
                     </div>
-                    <div class="post-details">
+                    <div class="post-details" id="post-details">
                         <div class="post-meta d-flex justify-content-between">
                             <div class="category">
                                 @include('front._layout.partials.blogPostCategoryName',[
@@ -27,7 +27,7 @@
                         </div>
                         <h1>{{$blogPost->name}}<a href="#"><i class="fa fa-bookmark-o"></i></a></h1>
                         <div class="post-footer d-flex align-items-center flex-column flex-sm-row">
-                            <a href="blog-author.html" class="author d-flex align-items-center flex-wrap">
+                            <a href="{{optional($blogPost->user)->getSingleUser()}}" class="author d-flex align-items-center flex-wrap">
                                 <div class="avatar">
                                     <img src="{{optional($blogPost->user)->getPhotoUrl()}}" alt="{{optional($blogPost->user)->name}}" class="img-fluid">
                                 </div>
@@ -78,9 +78,11 @@
                             <header>
                                 <h3 class="h6">@lang('Leave a reply')</h3>
                             </header>
-                            @include('front.blog_posts.partials.comment_form',[
-                                'blogPost' => $blogPost
-                            ])
+                            <div id="comment-display">
+                                @include('front.blog_posts.partials.comment_form',[
+                                    'blogPost' => $blogPost
+                                ])
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -125,7 +127,20 @@ function refreshCommentsBlogPost(){
         toastr.error("@lang('Something is wrong with listing comments')");
     });
 }
+ $('#post-details').on('submit', '#comment-form', function (e) {
+        e.preventDefault();
 
+        $.ajax({
+            "url": "{{route('front.comments.store')}}",
+            "type": "post",
+            "data": $(this).serialize() 
+        }).done(function(response){
+            $('#comment-display').html(response);
+            refreshCommentsBlogPost();
+        }).fail(function(){
+            toastr.error("@lang('Something is wrong with creating comments')");
+        }); 
+    });
 refreshCommentsBlogPost();
 </script>
 @endpush

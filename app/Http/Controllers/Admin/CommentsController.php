@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\Comment;
 use App\Models\BlogPost;
-use App\User;
 
 class CommentsController extends Controller 
 {
@@ -15,7 +14,7 @@ class CommentsController extends Controller
     public function index() 
     {
         $blogPosts = BlogPost::query()
-                  ->where('status','LIKE', BlogPost::STATUS_ENABLE)
+                  ->isEnable()
                   ->orderBy('created_at','desc')
                   ->get();
         return view('admin.comments.index',[
