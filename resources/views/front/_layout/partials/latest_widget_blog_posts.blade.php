@@ -14,7 +14,10 @@
                 <div class="title"><strong>{{$blogPost->getStrName()}}</strong>
                     <div class="d-flex align-items-center">
                         <div class="views"><i class="icon-eye"></i>{{$blogPost->reviews}}</div>
-                        <div class="comments"><i class="icon-comment"></i>{{$blogPost->getCountComments()}}</div>
+                        <div class="comments">
+                            <i class="icon-comment"></i>
+                            <span data-container='id-{{$blogPost->id}}-comments'>{{$blogPost->getCountComments()}}
+                        </div>
                     </div>
                 </div>
             </div>

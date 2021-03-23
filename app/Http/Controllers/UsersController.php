@@ -16,10 +16,10 @@ class UsersController extends Controller
         }
         
         if($slugUrl != $user->getSlugUrl()){
-            abort(404);
+            return redirect()->away($user->getSingleUser());
         }
         
-        $userBlogPosts = BlogPost::query()
+        /*$userBlogPosts = BlogPost::query()
             ->with([
                 'category',
                 'user' => function ($query) {
@@ -31,10 +31,24 @@ class UsersController extends Controller
             ])
             ->latestBlogPostWithStatusEnable()
             ->where('user_id',$user->id)
-            ->paginate(12);
+            ->paginate(12);*/
+        $userBlogPosts = $user
+                        ->blogPosts()
+                        ->latestBlogPostWithStatusEnable();
+        $userBlogPosts->with([
+                            'category',
+                            'user' => function ($query) {
+                                return $query->isActive();
+                            },
+                            'comments' => function ($query) {
+                                return $query->isEnable();
+                            }
+                        ]);
+        $userBlogPostsPaginate = $userBlogPosts->paginate(12);
+        
         return view('front.users.single',[
             'user' => $user,
-            'userBlogPosts' => $userBlogPosts,
+            'userBlogPostsPaginate' => $userBlogPostsPaginate,
         ]);
     }
        

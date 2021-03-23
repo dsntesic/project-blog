@@ -13,27 +13,29 @@ class TagsController extends Controller
     {
         
         if($slugUrl != $tag->getSlugUrl()){
-            abort(404);
+            return redirect()->away($tag->getSingleTag());
         }
         
-        $tagBlogPosts = BlogPost::query()
-            ->with([
-                'category',
-                'user' => function($query){
-                    return $query->isActive();
-                },
-                'comments' => function ($query) {
-                    return $query->isEnable();
-                }
-            ])
-            ->latestBlogPostWithStatusEnable()
-            ->whereHas('tags',function($query) use ($tag){
-                return $query->where('blog_post_tags.tag_id',$tag->id); 
-            })
-            ->paginate(12);
+        $tagBlogPosts = $tag
+                        ->blogPosts()
+                        ->latestBlogPostWithStatusEnable()
+                        ->whereHas('tags',function($query) use ($tag){
+                            return $query->where('blog_post_tags.tag_id',$tag->id); 
+                        });
+        $tagBlogPosts->with([
+                            'category',
+                            'user' => function ($query) {
+                                return $query->isActive();
+                            },
+                            'comments' => function ($query) {
+                                return $query->isEnable();
+                            }
+                        ]);
+        $tagBlogPostsPaginate = $tagBlogPosts->paginate(12);
+        
         return view('front.tags.single',[
             'tag' => $tag,
-            'tagBlogPosts' => $tagBlogPosts,
+            'tagBlogPostsPaginate' => $tagBlogPostsPaginate,
         ]);
     }
        

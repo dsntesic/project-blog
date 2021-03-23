@@ -20,10 +20,10 @@
             </h2>
             <div class="container">
                 @include('front._layout.partials.latest_blog_posts_main',[
-                    'blogPostsMain' =>$userBlogPosts
+                    'blogPostsMain' =>$userBlogPostsPaginate
                 ])
                 <!-- Pagination -->
-                {{ $userBlogPosts->links('front._layout.partials.pagination') }}
+                {{ $userBlogPostsPaginate->links('front._layout.partials.pagination') }}
             </div>
         </main>
         <aside class="col-lg-4">

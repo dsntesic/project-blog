@@ -13,10 +13,10 @@
             <h2 class="mb-3">@lang('Tag') "{{$tag->name}}"</h2>
             <div class="container">
                 @include('front._layout.partials.latest_blog_posts_main',[
-                    'blogPostsMain' =>$tagBlogPosts
+                    'blogPostsMain' =>$tagBlogPostsPaginate
                 ])
                 <!-- Pagination -->
-                {{ $tagBlogPosts->links('front._layout.partials.pagination') }}
+                {{ $tagBlogPostsPaginate->links('front._layout.partials.pagination') }}
             </div>
         </main>
         <aside class="col-lg-4">

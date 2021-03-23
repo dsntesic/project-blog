@@ -163,7 +163,7 @@ class SlidersController extends Controller
         $validationPhoto = $slider->exists?'nullable':'required';
         return [          
             'name' => ['required', 'string','max:50'],           
-            'button_url' => ['required', 'string','regex:/((http:|https:)\/\/)|(\/)/'],           
+            'button_url' => ['required', 'string','regex:/((http|https):\/\/)|(^\/)/'],           
             'button_title' => ['required', 'string','max:30','unique:sliders,name'],           
             'photo' => [$validationPhoto , 'image','max:65000'],          
         ];

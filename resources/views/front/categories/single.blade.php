@@ -13,10 +13,10 @@
             <h2 class="mb-3">@lang('Category') "{{$category->name}}"</h2>
             <div class="container">
                 @include('front._layout.partials.latest_blog_posts_main',[
-                    'blogPostsMain' =>$categoryBlogPosts
+                    'blogPostsMain' =>$categoryBlogPostsPaginate
                 ])
                 <!-- Pagination -->
-                {{ $categoryBlogPosts->links('front._layout.partials.pagination') }}
+                {{ $categoryBlogPostsPaginate->links('front._layout.partials.pagination') }}
             </div>
         </main>
         <aside class="col-lg-4">

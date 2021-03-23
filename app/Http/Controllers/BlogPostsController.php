@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\BlogPost;
 use App\Models\Comment;
+use Illuminate\Support\Facades\Cache;
 
 class BlogPostsController extends Controller
 {
@@ -58,13 +59,15 @@ class BlogPostsController extends Controller
     
     public function single(BlogPost $blogPost,$slugUrl) 
     {
+        Cache::forget('latestBlogPostsWithMaxReviews');
+                
         if($blogPost->isBlogPostDisable()){
             abort(404);
         }
         
         if($slugUrl != $blogPost->getSlugUrl()){
-            abort(404);
-        }      
+            return redirect()->away($blogPost->getSingleBlogPost());
+        }
         
         $blogPost->update([
             'reviews' => $blogPost->reviews + 1,
@@ -72,24 +75,24 @@ class BlogPostsController extends Controller
         ]);
         
         $blogPost->load([
-            'category',
             'user' => function($query){
                         return $query->isActive();
                     },
             'tags',
             'comments' => function($query){
-                return $query->where('status',Comment::STATUS_ENABLE);
+                return $query->isEnable();
             }
             ]);
-        
+            
         $nextBlogPost = BlogPost::query()
                         ->where('created_at', '>', $blogPost->created_at)
                         ->where('status', BlogPost::STATUS_ENABLE)
+                        ->orderBy('created_at', 'ASC')
                         ->first();
         
         $previousBlogPost = BlogPost::query()
                             ->where('created_at', '<', $blogPost->created_at)
-                            ->orderBy('created_at','DESC')
+                            ->latestBlogPostWithStatusEnable()
                             ->first();
         
         return view('front.blog_posts.single',[

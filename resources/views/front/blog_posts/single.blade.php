@@ -36,7 +36,12 @@
                             <div class="d-flex align-items-center flex-wrap">       
                                 <div class="date"><i class="icon-clock"></i> {{$blogPost->getFormatHumansDate()}}</div>
                                 <div class="views"><i class="icon-eye"></i> {{$blogPost->reviews}}</div>
-                                <div class="comments meta-last"><a href="#post-comments"><i class="icon-comment"></i>{{$blogPost->getCountComments()}}</a></div>
+                                <div class="comments meta-last">
+                                    <a href="#post-comments">
+                                        <i class="icon-comment"></i>
+                                        <span data-container='comments'>{{$blogPost->getCountComments()}}</span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                         <div class="post-body">
@@ -46,7 +51,7 @@
                         @if($blogPost->tags->count() > 0)
                         <div class="post-tags">
                             @foreach($blogPost->tags as $tag)
-                            <a href="blog-tag.html" class="tag">#{{$tag->name}}</a>
+                            <a href="{{$tag->getSingleTag()}}" class="tag">#{{$tag->name}}</a>
                             @endforeach
                         </div>
                         @endif
@@ -114,6 +119,7 @@
 @endsection
 @push('footer_javascript')
 <script type="text/javascript">
+var errorsField = ['name','email','message'];
 function refreshCommentsBlogPost(){
     $.ajax({
         "url":"{{route('front.blog_posts.comments',['blogPost' => $blogPost->id])}}",
@@ -128,17 +134,39 @@ function refreshCommentsBlogPost(){
     });
 }
  $('#post-details').on('submit', '#comment-form', function (e) {
+     
         e.preventDefault();
-
         $.ajax({
             "url": "{{route('front.comments.store')}}",
             "type": "post",
             "data": $(this).serialize() 
         }).done(function(response){
-            $('#comment-display').html(response);
+            let oldComments = $("[data-container='comments']").text();
+            oldComments++;
+            $("[data-container='comments']").text(oldComments);
+            $("[data-container='id-" + response.blog_post_id + "-comments']").text(oldComments);
+            toastr.success(response.system_message);
+            for(let fieldName of errorsField){
+                $('#user' + fieldName).val('');
+                $('#user' + fieldName).removeClass('is-invalid');
+                $('#user' + fieldName).next().empty();
+                
+            }
             refreshCommentsBlogPost();
-        }).fail(function(){
-            toastr.error("@lang('Something is wrong with creating comments')");
+        }).fail(function(xhr){
+            if(xhr.responseJSON && xhr.responseJSON['errors']){               
+                for(let fieldName of errorsField){
+                    if(xhr.responseJSON['errors'][fieldName]){
+                        $('#user' + fieldName).addClass('is-invalid');
+                        $('#user' + fieldName).next().empty().append('<span>' + xhr.responseJSON['errors'][fieldName] + '</span>');
+                    }else{
+                        $('#user' + fieldName).removeClass('is-invalid');
+                        $('#user' + fieldName).next().remove();
+                    }
+                }
+            }else{
+                toastr.error("@lang('Something is wrong with creating comments')");
+            }
         }); 
     });
 refreshCommentsBlogPost();

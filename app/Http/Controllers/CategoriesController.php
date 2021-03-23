@@ -14,11 +14,13 @@ class CategoriesController extends Controller
     {
         
         if($slugUrl != $category->getSlugUrl()){
-            abort(404);
+            return redirect()->away($category->getSingleCategory());
         }
         
-        $categoryBlogPosts = BlogPost::query()
-                            ->with([
+        $categoryBlogPosts = $category
+                            ->blogPosts()
+                            ->latestBlogPostWithStatusEnable();
+        $categoryBlogPosts->with([
                                 'category',
                                 'user' => function ($query) {
                                     return $query->isActive();
@@ -26,14 +28,12 @@ class CategoriesController extends Controller
                                 'comments' => function ($query) {
                                     return $query->isEnable();
                                 }
-                            ])
-                            ->where('category_id',$category->id)
-                            ->latestBlogPostWithStatusEnable()
-                            ->paginate(12);
+                            ]);
+        $categoryBlogPostsPaginate = $categoryBlogPosts->paginate(12);
         
         return view('front.categories.single',[
             'category' => $category,
-            'categoryBlogPosts' => $categoryBlogPosts,
+            'categoryBlogPostsPaginate' => $categoryBlogPostsPaginate,
         ]);
     }
        

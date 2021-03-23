@@ -7,12 +7,15 @@ use Illuminate\Http\Request;
 use App\Models\Comment;
 use App\Models\BlogPost;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Cache;
 
 class CommentsController extends Controller
 {
     
     public function store(Request $request) 
     {
+        
+        Cache::forget('latestBlogPostsWithMaxReviews');
                 
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string','max:50'],
@@ -21,21 +24,17 @@ class CommentsController extends Controller
             'message' => ['required', 'string' ,'max:500'],
         ]);
         
-        $blogPost = BlogPost::findOrFail($request->blog_post_id);
-        
         if ($validator->fails()) {
-            return  view('front.blog_posts.partials.comment_form',[
-                'request' => $request, 
-                'blogPost' => $blogPost,
+            return response()->json([
                 'errors' => $validator->errors()
-            ]);
+            ],422);
         }
         $newComment = new Comment($validator->valid());
         
         $newComment->save();
-            
-        return view('front.blog_posts.partials.comment_form',[
-            'blogPost' =>$blogPost,
+        
+        return response()->json([
+            'blog_post_id' => $request->blog_post_id,
             'system_message' => __('Comment has been created successfully')
         ]);
     }

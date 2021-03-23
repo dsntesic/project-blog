@@ -83,9 +83,10 @@
 @push('footer_javascript')
 <script type="text/javascript">
     jQuery.validator.addMethod('testUrl', function (value, element) {
-        return this.optional(element) || /url/.test(value) || /\//.test(value);
+        
+        return this.optional(element) || /^(http|https):\/\//.test(value) || /^\//.test(value);
     }
-    , 'Invalid url.Url must be url tupe or start with /'
+    , 'Invalid url.Url must be url type or start with /'
             );
     $('#entity-form').validate({
         "highlight": function (element) {

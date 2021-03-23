@@ -119,7 +119,7 @@ Route::name('front.')->group(function(){
         Route::prefix('/posts')->name('blog_posts.')->group(function(){
             Route::get('/','BlogPostsController@index')->name('index');
             Route::get('/search','BlogPostsController@search')->name('search');
-            Route::get('/single/{blogPost}/{blogPostSlugName}','BlogPostsController@single')->name('single')->middleware('ereeseCache');
+            Route::get('/single/{blogPost}/{blogPostSlugName}','BlogPostsController@single')->name('single');
             Route::get('/comments/{blogPost}','BlogPostsController@comments')->name('comments');
         }); 
 
@@ -140,7 +140,7 @@ Route::name('front.')->group(function(){
 
         //Routes for CommentsController
         Route::prefix('/comments')->name('comments.')->group(function(){
-            Route::post('/store','CommentsController@store')->name('store')->middleware('ereeseCache');
+            Route::post('/store','CommentsController@store')->name('store');
         });
     });     
 });

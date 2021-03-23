@@ -39,7 +39,7 @@
         <div class="form-group col-md-12">
             <textarea 
                 name="message" 
-                id="usercomment" 
+                id="usermessage" 
                 placeholder="@lang('Type your comment')" 
                 class="form-control @if($errors->has('message')) is-invalid @endif"
             >@isset($request) {{$request->input('message')}} @endisset</textarea>
