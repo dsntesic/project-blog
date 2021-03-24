@@ -38,23 +38,18 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
-   
     
     /**
-     * The user has been authenticated.
+     * Get the needed authorization credentials from the request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  mixed  $user
-     * @return mixed
+     * @return array
      */
-    protected function authenticated(Request $request, $user)
+    protected function credentials(Request $request)
     {
-        if($user->status == User::STATUS_BAN){
-            session()->flash('system_message_danger' , __("You don't have permition"));
-            $this->guard()->logout();
-            return redirect()->route('login');
-        }
-        return redirect()->intended($this->redirectPath());
+        $credentials = $request->only($this->username(), 'password');
+        $credentials['status'] = User::STATUS_ACTIVE;
+        return $credentials;
     }
     
     /**

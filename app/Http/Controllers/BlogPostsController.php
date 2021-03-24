@@ -10,25 +10,33 @@ use Illuminate\Support\Facades\Cache;
 
 class BlogPostsController extends Controller
 {
-    public function index() 
+    public function index(Request $request) 
     {
-
-        $latestBlogPostsMain = BlogPost::query()
-                                ->with([
-                                    'category',
-                                    'user' => function($query){
-                                        return $query->isActive();
-                                    },
-                                    'comments' =>function($query){
-                                        return $query->isEnable();
-                                    }
-                                ])
-                                ->latestBlogPostWithStatusEnable()
-                                ->paginate(12);
-        
-        
+        $formData = $request->validate([
+            'page' =>['nullable','numeric'],
+        ]);
+        $page = !empty($formData)?$formData['page']:1;
+        $latestBlogPostsMainName = 'latestBlogPostsMain' . $page;
+        $$latestBlogPostsMainName = Cache::remember(
+                "$latestBlogPostsMainName",
+                now()->addSeconds(config('frontcachetime.latestBlogPostsMain')),
+                function () {
+                return BlogPost::query()
+                    ->with([
+                        'category',
+                        'user' => function($query){
+                            return $query->isActive();
+                        },
+                        'comments' =>function($query){
+                            return $query->isEnable();
+                        }
+                    ])
+                    ->latestBlogPostWithStatusEnable()
+                    ->paginate(12);
+                }
+        );
         return view('front.blog_posts.index',[
-            'latestBlogPostsMain' => $latestBlogPostsMain,
+            'latestBlogPostsMain' => $$latestBlogPostsMainName,
         ]);
     }
     
@@ -37,29 +45,35 @@ class BlogPostsController extends Controller
         $searchFormTerm = $request->validate([
             'search' => ['required','string'],
         ]);
-
-        $blogPostsMainSearch = BlogPost::query()
-                                ->with([
-                                    'category',
-                                    'user' => function($query){
-                                        return $query->isActive();
-                                    },
-                                    'comments'=>function($query){
-                                        return $query->isEnable();
-                                    }
-                                ])
-                                ->latestBlogPostWithStatusEnable()
-                                ->frontSearchBlogPost($searchFormTerm['search'])
-                                ->paginate(12);
+        $search = !empty($searchFormTerm)?$searchFormTerm['search']:'';
+        $blogPostsMainSearchName = 'blogPostsMainSearch' . $search;
+        $$blogPostsMainSearchName = Cache::remember(
+                "$blogPostsMainSearchName",
+                now()->addSeconds(config('frontcachetime.blogPostsMainSearch')),
+                function () use($searchFormTerm) {
+                    return BlogPost::query()
+                        ->with([
+                            'category',
+                            'user' => function($query){
+                                return $query->isActive();
+                            },
+                            'comments'=>function($query){
+                                return $query->isEnable();
+                            }
+                        ])
+                        ->latestBlogPostWithStatusEnable()
+                        ->frontSearchBlogPost($searchFormTerm['search'])
+                        ->paginate(12);
+                }
+        );
         return view('front.blog_posts.search',[
             'searchFormTerm' => $searchFormTerm,
-            'blogPostsMainSearch' => $blogPostsMainSearch,
+            'blogPostsMainSearch' => $$blogPostsMainSearchName,
         ]);
     }
     
     public function single(BlogPost $blogPost,$slugUrl) 
     {
-        Cache::forget('latestBlogPostsWithMaxReviews');
                 
         if($blogPost->isBlogPostDisable()){
             abort(404);
@@ -74,31 +88,22 @@ class BlogPostsController extends Controller
             'updated_at' => now(),
         ]);
         
-        $blogPost->load([
-            'user' => function($query){
-                        return $query->isActive();
-                    },
-            'tags',
-            'comments' => function($query){
-                return $query->isEnable();
-            }
-            ]);
-            
-        $nextBlogPost = BlogPost::query()
-                        ->where('created_at', '>', $blogPost->created_at)
-                        ->where('status', BlogPost::STATUS_ENABLE)
-                        ->orderBy('created_at', 'ASC')
-                        ->first();
+        $singleBlogPostById = 'singleBlogPosts' . $blogPost->id;
         
-        $previousBlogPost = BlogPost::query()
-                            ->where('created_at', '<', $blogPost->created_at)
-                            ->latestBlogPostWithStatusEnable()
-                            ->first();
+        $$singleBlogPostById = $this->getSingleFrontBlogPostFromCache($blogPost,$singleBlogPostById);
+       
+        $nextBlogPostByBlogPostId = 'nextBlogPost' . $blogPost->id;
+        
+        $$nextBlogPostByBlogPostId = $this->getNextFrontBlogPostFromCache($blogPost,$nextBlogPostByBlogPostId);
+        
+        $previousBlogPostByBlogPostId = 'previousBlogPost' . $blogPost->id;
+
+        $$previousBlogPostByBlogPostId = $this->getPreviousFrontBlogPostFromCache($blogPost,$previousBlogPostByBlogPostId);
         
         return view('front.blog_posts.single',[
-            'blogPost' => $blogPost,
-            'nextBlogPost' => $nextBlogPost,
-            'previousBlogPost' => $previousBlogPost,
+            'blogPost' => $$singleBlogPostById,
+            'nextBlogPost' => $$nextBlogPostByBlogPostId,
+            'previousBlogPost' => $$previousBlogPostByBlogPostId,
         ]);
     }
     
@@ -119,5 +124,73 @@ class BlogPostsController extends Controller
             'commentsBlogPost' => $commentsBlogPost
         ]);
     }
-       
+    
+    /**
+     * The function returns the blog post from the cache memory, and if not takes it from the database
+     * @param BlogPost $blogPost
+     * @param string $singleBlogPostById
+     * @return BlogPost $$singleBlogPostById
+     */
+    protected function getSingleFrontBlogPostFromCache(BlogPost $blogPost,$singleBlogPostById) 
+    {
+        
+        return  Cache::remember(
+                "$singleBlogPostById",
+                now()->addSeconds(config('frontcachetime.singleBlogPost')),
+                function () use($blogPost){
+                    return $blogPost->load([
+                                'user' => function($query){
+                                            return $query->isActive();
+                                        },
+                                'tags',
+                                'category',
+                                'comments' => function($query){
+                                    return $query->isEnable();
+                                }
+                            ]);
+                }
+        );
+    }
+    
+    /**
+     * The function returns the next blog post from the cache memory, and if not takes it from the database
+     * @param BlogPost $blogPost
+     * @param string $nextBlogPostByBlogPostId
+     * @return BlogPost $$nextBlogPostByBlogPostId
+     */
+    protected function getNextFrontBlogPostFromCache(BlogPost $blogPost,$nextBlogPostByBlogPostId) 
+    {
+        return Cache::remember(
+                "$nextBlogPostByBlogPostId",
+                now()->addSeconds(config('frontcachetime.nextBlogPost')),
+                function () use($blogPost){
+                    return BlogPost::query()
+                        ->where('created_at', '>', $blogPost->created_at)
+                        ->where('status', BlogPost::STATUS_ENABLE)
+                        ->orderBy('created_at', 'ASC')
+                        ->first();
+                }
+        );
+    }
+
+    /**
+     * 
+     * @param BlogPost $blogPost
+     * @param type $previousBlogPostByBlogPostId
+     * @return BlogPost $$previousBlogPostByBlogPostId
+     */
+    protected function getPreviousFrontBlogPostFromCache(BlogPost $blogPost,$previousBlogPostByBlogPostId) 
+    {
+        return Cache::remember(
+                "$previousBlogPostByBlogPostId",
+                now()->addSeconds(config('frontcachetime.previousBlogPost')),
+                function () use($blogPost){
+                        return BlogPost::query()
+                            ->where('created_at', '<', $blogPost->created_at)
+                            ->latestBlogPostWithStatusEnable()
+                            ->first();
+                }
+        );
+    }
+
 }

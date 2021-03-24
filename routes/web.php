@@ -81,21 +81,21 @@ Route::middleware('auth')->prefix('/admin')->namespace('Admin')->name('admin.')-
         Route::get('/','SlidersController@index')->name('index');
         Route::post('/datatable','SlidersController@datatable')->name('datatable');
         Route::get('/create','SlidersController@create')->name('create');
-        Route::post('/store','SlidersController@store')->name('store')->middleware('ereeseCache');
+        Route::post('/store','SlidersController@store')->name('store');
         Route::get('/edit/{slider}','SlidersController@edit')->name('edit');
-        Route::post('/update/{slider}','SlidersController@update')->name('update')->middleware('ereeseCache');
-        Route::post('/enable','SlidersController@enable')->name('enable')->middleware('ereeseCache');
-        Route::post('/disable','SlidersController@disable')->name('disable')->middleware('ereeseCache');       
-        Route::post('/change-priorities','SlidersController@changePriorities')->name('change_priorities')->middleware('ereeseCache');
-        Route::post('/delete','SlidersController@delete')->name('delete')->middleware('ereeseCache');
+        Route::post('/update/{slider}','SlidersController@update')->name('update');
+        Route::post('/enable','SlidersController@enable')->name('enable');
+        Route::post('/disable','SlidersController@disable')->name('disable');       
+        Route::post('/change-priorities','SlidersController@changePriorities')->name('change_priorities');
+        Route::post('/delete','SlidersController@delete')->name('delete');
     });
     
     //Routes for CommentsController
     Route::prefix('/comments')->name('comments.')->group(function(){
         Route::get('/','CommentsController@index')->name('index');
         Route::post('/datatable','CommentsController@datatable')->name('datatable');
-        Route::post('/enable','CommentsController@enable')->name('enable')->middleware('ereeseCache');
-        Route::post('/disable','CommentsController@disable')->name('disable')->middleware('ereeseCache');
+        Route::post('/enable','CommentsController@enable')->name('enable');
+        Route::post('/disable','CommentsController@disable')->name('disable');
     });
     
 });

@@ -15,8 +15,9 @@ class TestViewComposer {
     
     public function compose(View $view) {
         
-        $frontCategories = Cache::rememberForever(
+        $frontCategories = Cache::remember(
                 'frontCategories',
+                now()->addSeconds(config('frontcachetime.frontCategories')),
                 function () {
                     return Category::query()
                             ->withCount([
@@ -29,8 +30,9 @@ class TestViewComposer {
                 }
         );
         
-        $frontTags = Cache::rememberForever(
+        $frontTags = Cache::remember(
                 'frontTags',
+                now()->addSeconds(config('frontcachetime.frontTags')),
                 function () {
                     return Tag::query()
                             ->withCount([
@@ -43,8 +45,9 @@ class TestViewComposer {
                 }
         );
         
-        $latestBlogPosts = Cache::rememberForever(
+        $latestBlogPosts = Cache::remember(
                 'latestBlogPosts',
+                now()->addSeconds(config('frontcachetime.latestBlogPosts')),
                 function () {
                     return BlogPost::query()
                             ->with([
@@ -59,8 +62,9 @@ class TestViewComposer {
                 }
         );
         
-        $latestBlogPostsWithMaxReviews = Cache::rememberForever(
+        $latestBlogPostsWithMaxReviews = Cache::remember(
                 'latestBlogPostsWithMaxReviews',
+                now()->addSeconds(config('frontcachetime.latestBlogPostsWithMaxReviews')),
                 function () {
                     return BlogPost::query()
                             ->with([

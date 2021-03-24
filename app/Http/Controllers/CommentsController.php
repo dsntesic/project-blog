@@ -14,8 +14,6 @@ class CommentsController extends Controller
     
     public function store(Request $request) 
     {
-        
-        Cache::forget('latestBlogPostsWithMaxReviews');
                 
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string','max:50'],
