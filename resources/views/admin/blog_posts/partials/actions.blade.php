@@ -60,7 +60,7 @@
     <button 
         type="button" 
         class="btn btn-info" 
-        title='Set important'
+        title='Set no important'
         data-toggle="modal" 
         data-target="#custom-modal"    
         data-action='noImportant' 
@@ -73,7 +73,7 @@
     <button 
         type="button" 
         class="btn btn-info" 
-        title='Set no important' 
+        title='Set important' 
         data-toggle="modal" 
         data-target="#custom-modal"    
         data-action='important' 

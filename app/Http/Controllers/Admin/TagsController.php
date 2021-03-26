@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Validation\Rule;
 use App\Models\Tag;
 
 class TagsController extends Controller 
@@ -16,7 +15,7 @@ class TagsController extends Controller
         return view('admin.tags.index');
     }
 
-    public function datatable(Request $request) 
+    public function datatable() 
     {
         $query = Tag::query();
         return DataTables::of($query)

@@ -146,7 +146,6 @@ $('#entity-form').validate({
             "rangelength": [20, 255]
         },
         "photo": {
-            "required": true
         },
         "description": {
             "required": true,

@@ -276,8 +276,12 @@
             toastr.success(response.system_message);
             entitiesDatatable.ajax.reload(null, false);
         })
-        .fail(function () {
-            toastr.error("@lang('Some error occured while changing Blog Post')");
+        .fail(function (xhr) {
+            let system_errors = "@lang('Some error occured while changing Blog Post')";
+            if(xhr.responseJSON && xhr.responseJSON['system_errors']){
+                system_errors = xhr.responseJSON['system_errors'];
+            }
+            toastr.error(system_errors);
         });
     });
 </script>

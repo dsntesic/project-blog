@@ -165,7 +165,12 @@ class BlogPostsController extends Controller
             'id' => ['required', 'numeric', 'exists:blog_posts,id']
         ]);
 
-        $blogPost = BlogPost::findOrFail($formData['id']);
+        $blogPost = BlogPost::findOrFail($formData['id']);      
+        if ($blogPost->user->isUserBan()) {
+            return response()->json([
+                'system_errors' => __('Blog post activation disabled, user inactive')
+            ],403);
+        }
         $blogPost ->status = BlogPost::STATUS_ENABLE;        
         $blogPost->save();
         

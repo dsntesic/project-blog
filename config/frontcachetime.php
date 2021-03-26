@@ -12,6 +12,7 @@ return [
     'featuredBlogPosts' => 120,
     'categoryBlogPosts' => 60,
     'tagBlogPosts' => 60,
+    'userBlogPosts' => 20,
     'singleBlogPost' => 20,
     'nextBlogPost' => 20,
     'previousBlogPost' => 20,
