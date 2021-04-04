@@ -26,7 +26,7 @@ class TagsController extends Controller
         
         $tagByIdBlogPostsPerPage = 'tagBlogPosts' . $tag->id . $page;
         
-        $$tagByIdBlogPostsPerPage = Cache::remember(
+        $tagBlogPostsPaginate = Cache::remember(
                 "$tagByIdBlogPostsPerPage",
                 now()->addSeconds(config('frontcachetime.tagBlogPosts')),
                 function () use($tag){
@@ -51,7 +51,7 @@ class TagsController extends Controller
         
         return view('front.tags.single',[
             'tag' => $tag,
-            'tagBlogPostsPaginate' => $$tagByIdBlogPostsPerPage,
+            'tagBlogPostsPaginate' => $tagBlogPostsPaginate,
         ]);
     }
        

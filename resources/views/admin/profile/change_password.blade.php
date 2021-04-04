@@ -1,6 +1,6 @@
 @extends('auth._layout.layout')
 
-@section('seo_title','Forgot password')
+@section('seo_title','Change password')
 
 @section('content')
 

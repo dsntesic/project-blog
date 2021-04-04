@@ -7,10 +7,6 @@ use App\User;
 
 class BlogPost extends Model {
 
-    protected $table = 'blog_posts';
-    
-    protected $fillable = ['status','name', 'description', 'content', 'category_id','reviews','created_at','updated_at'];
-
     const STATUS_ENABLE = 1;
     
     const STATUS_DISABLE = 0;
@@ -28,6 +24,12 @@ class BlogPost extends Model {
         self::IMPORTANT_YES,
         self::IMPORTANT_NO,
     ];
+    
+    protected $table = 'blog_posts';
+    
+    protected $fillable = ['status','name', 'description', 'content', 'category_id','reviews','created_at','updated_at'];
+
+    
 
     public function user() 
     {

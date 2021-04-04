@@ -29,7 +29,7 @@ class UsersController extends Controller
         
         $userByIdBlogPostsPerPage = 'userBlogPosts' . $user->id . $page;
         
-        $$userByIdBlogPostsPerPage = Cache::remember(
+        $userBlogPostsPaginate = Cache::remember(
                 "$userByIdBlogPostsPerPage",
                 now()->addSeconds(config('frontcachetime.userBlogPosts')),
                 function () use($user){
@@ -52,7 +52,7 @@ class UsersController extends Controller
         
         return view('front.users.single',[
             'user' => $user,
-            'userBlogPostsPaginate' => $$userByIdBlogPostsPerPage,
+            'userBlogPostsPaginate' => $userBlogPostsPaginate,
         ]);
     }
        

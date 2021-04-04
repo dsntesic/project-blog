@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\BlogPost;
-use App\Models\Comment;
 use Illuminate\Support\Facades\Cache;
 
 class BlogPostsController extends Controller
@@ -15,9 +14,12 @@ class BlogPostsController extends Controller
         $formData = $request->validate([
             'page' =>['nullable','numeric'],
         ]);
+        
         $page = !empty($formData)?$formData['page']:1;
+        
         $latestBlogPostsMainName = 'latestBlogPostsMain' . $page;
-        $$latestBlogPostsMainName = Cache::remember(
+        
+        $latestBlogPostsMain = Cache::remember(
                 "$latestBlogPostsMainName",
                 now()->addSeconds(config('frontcachetime.latestBlogPostsMain')),
                 function () {
@@ -36,7 +38,7 @@ class BlogPostsController extends Controller
                 }
         );
         return view('front.blog_posts.index',[
-            'latestBlogPostsMain' => $$latestBlogPostsMainName,
+            'latestBlogPostsMain' => $latestBlogPostsMain,
         ]);
     }
     
@@ -47,7 +49,7 @@ class BlogPostsController extends Controller
         ]);
         $search = !empty($searchFormTerm)?$searchFormTerm['search']:'';
         $blogPostsMainSearchName = 'blogPostsMainSearch' . $search;
-        $$blogPostsMainSearchName = Cache::remember(
+        $blogPostsMainSearch = Cache::remember(
                 "$blogPostsMainSearchName",
                 now()->addSeconds(config('frontcachetime.blogPostsMainSearch')),
                 function () use($searchFormTerm) {
@@ -68,7 +70,7 @@ class BlogPostsController extends Controller
         );
         return view('front.blog_posts.search',[
             'searchFormTerm' => $searchFormTerm,
-            'blogPostsMainSearch' => $$blogPostsMainSearchName,
+            'blogPostsMainSearch' => $blogPostsMainSearch,
         ]);
     }
     
@@ -90,20 +92,20 @@ class BlogPostsController extends Controller
         
         $singleBlogPostById = 'singleBlogPosts' . $blogPost->id;
         
-        $$singleBlogPostById = $this->getSingleFrontBlogPostFromCache($blogPost,$singleBlogPostById);
+        $singleBlogPost = $this->getSingleFrontBlogPostFromCache($blogPost,$singleBlogPostById);
        
         $nextBlogPostByBlogPostId = 'nextBlogPost' . $blogPost->id;
         
-        $$nextBlogPostByBlogPostId = $this->getNextFrontBlogPostFromCache($blogPost,$nextBlogPostByBlogPostId);
+        $nextBlogPost = $this->getNextFrontBlogPostFromCache($blogPost,$nextBlogPostByBlogPostId);
         
         $previousBlogPostByBlogPostId = 'previousBlogPost' . $blogPost->id;
 
-        $$previousBlogPostByBlogPostId = $this->getPreviousFrontBlogPostFromCache($blogPost,$previousBlogPostByBlogPostId);
+        $previousBlogPost = $this->getPreviousFrontBlogPostFromCache($blogPost,$previousBlogPostByBlogPostId);
         
         return view('front.blog_posts.single',[
-            'blogPost' => $$singleBlogPostById,
-            'nextBlogPost' => $$nextBlogPostByBlogPostId,
-            'previousBlogPost' => $$previousBlogPostByBlogPostId,
+            'blogPost' => $singleBlogPost,
+            'nextBlogPost' => $nextBlogPost,
+            'previousBlogPost' => $previousBlogPost,
         ]);
     }
     
@@ -117,11 +119,9 @@ class BlogPostsController extends Controller
                         }
                     ]
                 );
-                    
-        $commentsBlogPost = $blogPost->comments; 
         
         return view('front.blog_posts.partials.comments',[
-            'commentsBlogPost' => $commentsBlogPost
+            'commentsBlogPost' => $blogPost->comments
         ]);
     }
     

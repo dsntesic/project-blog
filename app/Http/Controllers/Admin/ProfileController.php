@@ -4,18 +4,18 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Validation\Rule;
 use App\User;
 
-class ProfileController extends Controller {
+class ProfileController extends Controller 
+{
     
-    public function edit() {
+    public function edit() 
+    {
         return view('admin.profile.edit');
     }
     
-    public function update(Request $request) {
-        $user = auth()->user();
+    public function update(Request $request) 
+    {
         
         $formData = $request->validate([
             'name' => ['required', 'string','max:50'],
@@ -23,6 +23,7 @@ class ProfileController extends Controller {
             'photo' => ['nullable', 'image','max:65000'],
         ]);
        
+        $user = auth()->user();
         $user->fill($formData);   
         if($request->hasFile('photo')){  
             $user->deletePhotoFromStorage();
@@ -36,12 +37,14 @@ class ProfileController extends Controller {
         return redirect()->route('admin.users.index');
     }
     
-    public function showChangePassword() {
+    public function showChangePassword() 
+    {
         return view('admin.profile.change_password');
     }
     
-    public function changePassword(Request $request) {
-        
+    public function changePassword(Request $request) 
+    {
+                            
         $user = auth()->user(); 
         
         $formData = $request->validate([
@@ -58,7 +61,7 @@ class ProfileController extends Controller {
             'new_password' => ['required', 'string','min:5'],
             'confirm_password' => ['required', 'string','min:5','same:new_password'],
         ]);
-            
+    
         $user->password = \Hash::make($formData['new_password']);           
         
         $user->save();
@@ -68,7 +71,8 @@ class ProfileController extends Controller {
         return redirect()->route('admin.users.index');
     }
 
-    public function deletePhoto(Request $request) {
+    public function deletePhoto(Request $request) 
+    {
         $formData = $request->validate([
             'id' => ['required', 'numeric', 'exists:users,id']
         ]);

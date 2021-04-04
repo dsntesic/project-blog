@@ -44,7 +44,10 @@
                                             value="{{old('name',auth()->user()->name)}}"
                                             class="form-control @error('name') is-invalid @enderror" 
                                             placeholder="@lang('Enter name')"
-                                            >
+                                        >
+                                        @include('admin._layout.partials.form_errors',[
+                                            'fieldName' => 'name'
+                                        ])
                                     </div>
                                     <div class="form-group">
                                         <label>Phone</label>                    

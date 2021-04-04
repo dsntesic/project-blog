@@ -24,7 +24,7 @@ class CategoriesController extends Controller
         
         $categoryByIdBlogPostsPerPage = 'categoryBlogPosts' . $category->id . $page;
         
-        $$categoryByIdBlogPostsPerPage = Cache::remember(
+        $categoryBlogPostsPaginate = Cache::remember(
                 "$categoryByIdBlogPostsPerPage",
                 now()->addSeconds(config('frontcachetime.categoryBlogPosts')),
                 function () use($category){
@@ -46,7 +46,7 @@ class CategoriesController extends Controller
         
         return view('front.categories.single',[
             'category' => $category,
-            'categoryBlogPostsPaginate' => $$categoryByIdBlogPostsPerPage,
+            'categoryBlogPostsPaginate' => $categoryBlogPostsPaginate,
         ]);
     }
        
